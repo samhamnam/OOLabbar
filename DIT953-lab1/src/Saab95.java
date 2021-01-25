@@ -1,11 +1,16 @@
 package src;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class Saab95 extends Car {
     private boolean turboOn;
+
+    public boolean getTurboOn(){
+        return turboOn;
+    }
     
-    public Saab95(Car.Dir dir, double[] pos) {
+    public Saab95(Car.Dir dir, Point2D.Double pos) {
         super(2,Color.red,125,"src.Saab95",dir,pos);
 	    turboOn = false;
     }
@@ -47,32 +52,19 @@ public class Saab95 extends Car {
         if(turboOn) turbo = 1.3;
         return enginePower * 0.01 * turbo;
     }
+
     /**
      * Increments the speed
      * @return void
      */
-    private void incrementSpeed(double amount) {
-        currentSpeed = getCurrentSpeed() + speedFactor() * amount;
+    public void incrementSpeed(double amount) {
+        setCurrentSpeed(getCurrentSpeed() + speedFactor() * amount);
     }
     /**
      * Decrement the speed
      * @return void
      */
-    private void decrementSpeed(double amount) {
-        currentSpeed = getCurrentSpeed() - speedFactor() * amount;
-    }
-    /**
-     * Speed up the car
-     * @return void
-     */
-    public void gas(double amount) {
-        incrementSpeed(amount);
-    }
-    /**
-     * Speed down the car
-     * @return void
-     */
-    public void brake(double amount) {
-        decrementSpeed(amount);
+    public void decrementSpeed(double amount) {
+        setCurrentSpeed(getCurrentSpeed() - speedFactor() * amount);
     }
 }

@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class Volvo240 extends Car {
     private final static double trimFactor = 1.25;
@@ -9,7 +10,7 @@ public class Volvo240 extends Car {
         super(4,Color.black,100, "src.Volvo240");
     }
 
-    public Volvo240(Car.Dir dir, double[] pos) {
+    public Volvo240(Car.Dir dir, Point2D.Double pos) {
         super(4,Color.black,100, "src.Volvo240", dir, pos);
     }
 
@@ -22,7 +23,7 @@ public class Volvo240 extends Car {
     }
 
     /**
-     * Return the speed factor.
+     * Returns the speed factor.
      * @return void
      */
     public double speedFactor(){
@@ -34,32 +35,15 @@ public class Volvo240 extends Car {
      * @param amount: amount to increment by.
      * @return void
      */
-    private void incrementSpeed(double amount) {
-	    currentSpeed = Math.min(getCurrentSpeed() + speedFactor() * amount, enginePower);
+    void incrementSpeed(double amount) {
+	    setCurrentSpeed(Math.min(getCurrentSpeed() + speedFactor() * amount, enginePower));
     }
     /**
      * Decrement the speed.
      * @param amount: amount to decrement by.
      * @return void
      */
-    private void decrementSpeed(double amount) {
-        currentSpeed = Math.max(getCurrentSpeed() - speedFactor() * amount, 0);
-    }
-
-    /**
-     * Speed up the car.
-     * @param amount: change amount.
-     * @return void
-     */
-    public void gas(double amount) {
-        incrementSpeed(amount);
-    }
-    /**
-     * Speed down the car.
-     * @param amount: change amount.
-     * @return void
-     */
-    public void brake(double amount) {
-        decrementSpeed(amount);
+    void decrementSpeed(double amount) {
+        setCurrentSpeed(Math.max(getCurrentSpeed() - speedFactor() * amount, 0));
     }
 }

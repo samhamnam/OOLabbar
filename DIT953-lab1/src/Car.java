@@ -1,10 +1,11 @@
 package src;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 
 /**
- * @author      Lukas Gartman, Samul Hammersberg, Kristoffer Gustafsson.
+ * @author      Lukas Gartman, Samuel Hammersberg, Kristoffer Gustafsson.
  * @version     1.0
  * @since       1.0
  */
@@ -15,7 +16,7 @@ public abstract class Car implements Movable {
     protected Color color; // Color of the car
     protected String modelName; // The car model name
     protected Dir direction; // The current direction the car is going in.
-    protected double[] position; // The current position of the car.
+    protected Point2D.Double position; // The current position of the car.
 
     public enum Dir {
         LEFT,
@@ -30,11 +31,11 @@ public abstract class Car implements Movable {
         this.color = color;
         this.modelName = modelName;
         this.direction = Dir.RIGHT;
-        this.position  = new double[]{0,0};
+        this.position  = new Point2D.Double(0,0);
         stopEngine();
     }
 
-    public Car(int nrDoors, Color color, int enginePower, String modelName, Dir direction, double[] position) {
+    public Car(int nrDoors, Color color, int enginePower, String modelName, Dir direction, Point2D.Double position) {
         this.nrDoors = nrDoors;
         this.enginePower = enginePower;
         this.color = color;
@@ -53,39 +54,24 @@ public abstract class Car implements Movable {
     public double getCurrentSpeed(){
         return currentSpeed;
     }
+    public void setCurrentSpeed(double amount) { this.currentSpeed = clamp(amount,0,enginePower); }
     public Color getColor(){
         return color;
     }
     public void setColor(Color clr){
         color = clr;
     }
-    public Dir getDirection() {
-        return direction;
-    }
-    public double[] getPosition() {
+    public Point2D.Double getPosition() {
         return position;
     }
+    public Dir getDirection() {return direction;}
 
-
-    /**
-     * Speed up the car.
-     * @param amount: change amount.
-     * @return void
-     */
-    abstract public void gas(double amount);
-
-    /**
-     * Slow down the car.
-     * @param amount: change amount.
-     * @return void
-     */
-    abstract public void brake(double amount);
 
     /**
      * Starts the car.
      * @return void
      */
-    abstract void startEngine();
+    public abstract void startEngine();
     /**
      * Stops the car.
      * @return void
@@ -106,10 +92,10 @@ public abstract class Car implements Movable {
      */
     public void move() {
         switch(direction) {
-            case UP: position[1] += speedFactor(); break;
-            case DOWN: position[1] -= speedFactor(); break;
-            case LEFT: position[0] -= speedFactor(); break;
-            case RIGHT: position[0] += speedFactor(); break;
+            case UP: position.y += speedFactor(); break;
+            case DOWN: position.y -= speedFactor(); break;
+            case LEFT: position.x -= speedFactor(); break;
+            case RIGHT: position.x += speedFactor(); break;
         }
     }
 
@@ -133,5 +119,54 @@ public abstract class Car implements Movable {
         dir += 1;
         if(dir > 3) dir = 0;
         direction = Dir.values()[dir];
+    }
+
+    /**
+     * Increment the speed.
+     * @param amount: amount to increment by.
+     * @return void
+     */
+    abstract void incrementSpeed(double amount);
+
+    /**
+     * Decrement the speed.
+     * @param amount: amount to decrement by.
+     * @return void
+     */
+     abstract void decrementSpeed(double amount);
+
+    /**
+     * Speed up the car.
+     * @param amount: change amount.
+     * @return void
+     */
+    public void gas(double amount) {
+        amount = clamp(amount, 0,1);
+        incrementSpeed(amount);
+    }
+
+    /**
+     * Speed down the car.
+     * @param amount: change amount.
+     * @return void
+     */
+    public void brake(double amount) {
+        amount = clamp(amount, 0, 1);
+        decrementSpeed(amount);
+    }
+
+    /**
+     * Clamps a value between two points.
+     * @param x: value to be clamped.
+     * @param min: minimum clamp value.
+     * @param max: maximum clamp value.
+     * @return double
+     */
+    private double clamp(double x, double min, double max){
+        if (x > max)
+            x = max;
+        else if (x < min)
+            x = min;
+        return x;
     }
 }
