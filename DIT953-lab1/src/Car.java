@@ -1,5 +1,7 @@
 package src;
 
+import org.junit.Ignore;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 
@@ -54,7 +56,9 @@ public abstract class Car implements Movable {
     public double getCurrentSpeed(){
         return currentSpeed;
     }
-    public void setCurrentSpeed(double amount) { this.currentSpeed = clamp(amount,0,enginePower); }
+    public void setCurrentSpeed(double amount) {
+        this.currentSpeed = clamp(amount,0,enginePower);
+    }
     public Color getColor(){
         return color;
     }
@@ -71,7 +75,9 @@ public abstract class Car implements Movable {
      * Starts the car.
      * @return void
      */
-    public abstract void startEngine();
+    public void startEngine() {
+        currentSpeed = 0.1;
+    }
     /**
      * Stops the car.
      * @return void
@@ -126,14 +132,18 @@ public abstract class Car implements Movable {
      * @param amount: amount to increment by.
      * @return void
      */
-    abstract void incrementSpeed(double amount);
+    public void incrementSpeed(double amount) {
+        setCurrentSpeed(getCurrentSpeed() + speedFactor() * amount);
+    }
 
     /**
      * Decrement the speed.
      * @param amount: amount to decrement by.
      * @return void
      */
-     abstract void decrementSpeed(double amount);
+    public void decrementSpeed(double amount) {
+        setCurrentSpeed(getCurrentSpeed() - speedFactor() * amount);
+    }
 
     /**
      * Speed up the car.
@@ -162,7 +172,8 @@ public abstract class Car implements Movable {
      * @param max: maximum clamp value.
      * @return double
      */
-    private double clamp(double x, double min, double max){
+    @Ignore
+    private double clamp(double x, double min, double max) {
         if (x > max)
             x = max;
         else if (x < min)

@@ -2,9 +2,7 @@ package test;
 
 import org.junit.Before;
 import org.junit.Test;
-import src.Car;
-import src.Saab95;
-import src.Volvo240;
+import src.*;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -23,10 +21,10 @@ public class Tests {
         cars.add(new Volvo240(randomDir(),randomPoint()));
         cars.add(new Saab95(randomDir(),randomPoint()));
     }
-    Point2D.Double randomPoint(){
+    Point2D.Double randomPoint() {
         return new Point2D.Double(rnd.nextDouble()+ rnd.nextInt(),rnd.nextDouble()+ rnd.nextInt());
     }
-    Car.Dir randomDir(){
+    Car.Dir randomDir() {
         return Car.Dir.values()[rnd.nextInt(4)];
     }
 
@@ -37,7 +35,6 @@ public class Tests {
         for (Car car : cars) {
             tmp = tmp && canTurnAllDirections(car, true);
         }
-        System.out.println(tmp);
         assertTrue(tmp);
     }
 
@@ -47,7 +44,6 @@ public class Tests {
         for (Car car : cars) {
             tmp = tmp && canTurnAllDirections(car, false);
         }
-        System.out.println(tmp);
         assertTrue(tmp);
     }
 
@@ -60,8 +56,6 @@ public class Tests {
             else car.turnRight();
 
             Car.Dir newDir = car.getDirection();
-
-            int turned = origDir.ordinal() - newDir.ordinal();
 
             switch (origDir) {
                 case LEFT:
@@ -112,7 +106,7 @@ public class Tests {
     }
 
     @Test
-    public void testSaab95Turbo(){
+    public void testSaab95Turbo() {
         Saab95 saab = new Saab95();
         saab.setTurboOn();
         boolean correct = saab.getTurboOn();
@@ -150,20 +144,24 @@ public class Tests {
 
     @Test
     public void gasUpCarExtremeValues() {
+        boolean correct = true;
         for (Car car : cars) {
-            car.gas(Double.MAX_VALUE);
-            car.gas(Double.MIN_VALUE);
-            car.gas(0);
+            double speed = car.getCurrentSpeed();
+            car.gas(1);
+            double newSpeed = car.getCurrentSpeed();
+            correct = correct && speed < newSpeed;
         }
-        assertTrue(true);
+        assertTrue(correct);
     }
 
     @Test
     public void brakeCarExtremeValues() {
+        boolean correct = true;
         for (Car car : cars) {
-            car.brake(Double.MAX_VALUE);
-            car.brake(Double.MIN_VALUE);
-            car.brake(0);
+            car.gas(1);
+            double speed = car.getCurrentSpeed();
+            car.brake(1);
+            correct = correct && speed < car.getCurrentSpeed();
         }
         assertTrue(true);
     }
