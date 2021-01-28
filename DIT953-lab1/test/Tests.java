@@ -163,7 +163,7 @@ public class Tests {
             car.brake(1);
             correct = correct && speed < car.getCurrentSpeed();
         }
-        assertTrue(true);
+        assertTrue(correct);
     }
 
     @Test
