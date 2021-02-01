@@ -1,13 +1,12 @@
-package test;
-
 import org.junit.Before;
 import org.junit.Test;
-import src.*;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+
 import java.util.ArrayList;
 import java.util.Random;
+
 
 import static org.junit.Assert.assertTrue;
 
@@ -15,11 +14,16 @@ import static org.junit.Assert.assertTrue;
 public class Tests {
     static final Random rnd = new Random();
     ArrayList<Car> cars = new ArrayList<>();
+    ArrayList<Truck> trucks = new ArrayList<>();
 
     @Before
     public void start() {
+        trucks.add(new Scania(randomDir(),randomPoint()));
+
+        cars.addAll(trucks);
         cars.add(new Volvo240(randomDir(),randomPoint()));
         cars.add(new Saab95(randomDir(),randomPoint()));
+
     }
     Point2D.Double randomPoint() {
         return new Point2D.Double(rnd.nextDouble()+ rnd.nextInt(),rnd.nextDouble()+ rnd.nextInt());
@@ -192,4 +196,28 @@ public class Tests {
         }
         assertTrue(tmp);
     }
+
+    @Test
+    public void raiseAndLowerPickupOfTruck(){
+        boolean tmp = true;
+        for(Truck truck : trucks){
+           double originalAngel = truck.getTruckbedAngle();
+           truck.raisePickup(20);
+           tmp &= !(originalAngel > truck.getTruckbedAngle());
+        }
+        assertTrue(tmp);
+    }
+
+    @Test
+    public void lowerPickupOfTruck(){
+        boolean correct = true;
+        for(Truck truck : trucks){
+            truck.raisePickup(10);
+            truck.lowerPickup(10);
+
+            correct &= truck.getTruckbedAngle() == 0;
+        }
+        assertTrue(correct);
+    }
+
 }
