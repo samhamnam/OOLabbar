@@ -10,13 +10,14 @@ import java.awt.geom.Point2D;
  * @since       1.0
  */
 public abstract class Car implements Movable {
-    protected int nrDoors; // Number of doors on the car
-    protected double enginePower; // Engine power of the car
-    protected double currentSpeed; // The current speed of the car
-    protected Color color; // Color of the car
-    protected String modelName; // The car model name
-    protected Dir direction; // The current direction the car is going in.
-    protected Point2D.Double position; // The current position of the car.
+    private int nrDoors; // Number of doors on the car
+
+    private double enginePower; // Engine power of the car
+    private double currentSpeed; // The current speed of the car
+    private Color color; // Color of the car
+    private String modelName; // The car model name
+    private Dir direction; // The current direction the car is going in.
+    private Point2D.Double position; // The current position of the car.
 
     public enum Dir {
         LEFT,
@@ -67,7 +68,25 @@ public abstract class Car implements Movable {
         return position;
     }
     public Dir getDirection() {return direction;}
+    public String getModelName() {
+        return modelName;
+    }
 
+    public void setNrDoors(int nrDoors) {
+        this.nrDoors = nrDoors;
+    }
+    public void setEnginePower(double enginePower) {
+        this.enginePower = enginePower;
+    }
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+    public void setDirection(Dir direction) {
+        this.direction = direction;
+    }
+    public void setPosition(Point2D.Double position) {
+        this.position = position;
+    }
 
     /**
      * Starts the car.

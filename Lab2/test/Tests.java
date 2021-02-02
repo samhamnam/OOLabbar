@@ -3,12 +3,10 @@ import org.junit.Test;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class Tests {
@@ -18,16 +16,19 @@ public class Tests {
 
     @Before
     public void start() {
-        trucks.add(new Scania(randomDir(),randomPoint()));
+        trucks.add(new Scania(randomDir(), randomPoint()));
+        trucks.add(new GeneralMotors(randomDir(), randomPoint()));
 
         cars.addAll(trucks);
-        cars.add(new Volvo240(randomDir(),randomPoint()));
-        cars.add(new Saab95(randomDir(),randomPoint()));
+        cars.add(new Volvo240(randomDir(), randomPoint()));
+        cars.add(new Saab95(randomDir(), randomPoint()));
 
     }
+
     Point2D.Double randomPoint() {
-        return new Point2D.Double(rnd.nextDouble()+ rnd.nextInt(),rnd.nextDouble()+ rnd.nextInt());
+        return new Point2D.Double(rnd.nextDouble() + rnd.nextInt(), rnd.nextDouble() + rnd.nextInt());
     }
+
     Car.Dir randomDir() {
         return Car.Dir.values()[rnd.nextInt(4)];
     }
@@ -101,10 +102,10 @@ public class Tests {
     @Test
     public void testStartEngine() {
         boolean correct = true;
-        for(Car car : cars) {
+        for (Car car : cars) {
             car.stopEngine();
             car.startEngine();
-            correct = correct && car.getCurrentSpeed() > 0;
+            correct &= car.getCurrentSpeed() > 0;
         }
         assertTrue(correct);
     }
@@ -115,14 +116,14 @@ public class Tests {
         saab.setTurboOn();
         boolean correct = saab.getTurboOn();
         saab.setTurboOff();
-        correct = correct && !saab.getTurboOn();
+        correct &= !saab.getTurboOn();
         assertTrue(correct);
     }
 
     @Test
     public void testConstructorAndGetters() {
         Car.Dir dir = Car.Dir.RIGHT;
-        Point2D.Double pos = new Point2D.Double(0,0);
+        Point2D.Double pos = new Point2D.Double(0, 0);
 
         Car v1 = new Volvo240();
         Car s1 = new Saab95();
@@ -140,10 +141,29 @@ public class Tests {
         Color testColor = Color.GREEN;
         s1.setColor(testColor);
         v1.setColor(testColor);
-
         boolean colorApplied = s1.getColor() == testColor && v1.getColor() == testColor;
 
-        assertTrue(doors && enginePower && currentSpeed && color && direction && position && colorApplied);
+        int newNrDoors = 20;
+        int newEnginePower = 1000;
+        String newModelName = "test";
+        Car.Dir newDir = Car.Dir.UP;
+        s1.setNrDoors(newNrDoors);
+        s1.setEnginePower(newEnginePower);
+        s1.setModelName(newModelName);
+        s1.setDirection(newDir);
+
+        boolean nrDoorsApplied = newNrDoors == s1.getNrDoors();
+        boolean enginePwrApplied = newEnginePower == s1.getEnginePower();
+        boolean modelNameApplied = newModelName.equals(s1.getModelName());
+        boolean directionApplied = newDir == s1.getDirection();
+
+
+        assertTrue(
+                doors && enginePower && currentSpeed &&
+                        color && direction && position &&
+                        colorApplied && nrDoorsApplied && enginePwrApplied &&
+                        modelNameApplied && directionApplied
+        );
     }
 
     @Test
@@ -183,6 +203,7 @@ public class Tests {
         }
         assertTrue(tmp);
     }
+
     @Test
     public void moveInACircleRightToOrigin() {
         boolean tmp = true;
@@ -198,26 +219,138 @@ public class Tests {
     }
 
     @Test
-    public void raiseAndLowerPickupOfTruck(){
+    public void raiseAndLowerPickupOfTruck() {
         boolean tmp = true;
-        for(Truck truck : trucks){
-           double originalAngel = truck.getTruckbedAngle();
-           truck.raisePickup(20);
-           tmp &= !(originalAngel > truck.getTruckbedAngle());
+        for (Truck truck : trucks) {
+            double originalAngel = truck.getTruckbedAngle();
+            truck.raisePickup();
+            tmp &= !(originalAngel > truck.getTruckbedAngle());
         }
         assertTrue(tmp);
     }
 
     @Test
-    public void lowerPickupOfTruck(){
+    public void lowerPickupOfTruck() {
         boolean correct = true;
-        for(Truck truck : trucks){
-            truck.raisePickup(10);
-            truck.lowerPickup(10);
+        for (Truck truck : trucks) {
+            truck.raisePickup();
+            truck.lowerPickup();
 
             correct &= truck.getTruckbedAngle() == 0;
         }
         assertTrue(correct);
+    }
+
+    @Test
+    public void GeneralMotorsPickUpCarNear() {
+        GeneralMotors gm = new GeneralMotors();
+
+    }
+
+    @Test
+    public void GeneralMotorsPickUpAllCarClose() {
+        int x = rnd.nextInt();
+        int y = rnd.nextInt();
+        GeneralMotors gm = new GeneralMotors(randomDir(), new Point2D.Double(x, y));
+        gm.raisePickup();
+        boolean tmp = true;
+        for (Car car : cars) {
+            car.setPosition(new Point2D.Double(x, y));
+            tmp &= gm.pickUpCar(car);
+
+        }
+        assertTrue(tmp);
+    }
+
+    @Test
+    public void generalMotorsDropCar() {
+        GeneralMotors gm = new GeneralMotors();
+        gm.raisePickup();
+
+        Car car = new Volvo240();
+        gm.pickUpCar(car);
+        Car droppedCar = gm.dropOffCar();
+
+        assertEquals(car, droppedCar);
+    }
+
+    @Test
+    public void generalMotorsDropCarFail() {
+        GeneralMotors gm = new GeneralMotors();
+        gm.raisePickup();
+
+        Car car = new Volvo240();
+        gm.pickUpCar(car);
+        gm.lowerPickup();
+
+        assertNull(gm.dropOffCar());
+    }
+
+    @Test
+    public void generalMotorsDropCarFailEmpty() {
+        GeneralMotors gm = new GeneralMotors();
+        assertNull(gm.dropOffCar());
+    }
+
+    @Test
+    public void generalMotorsPickUpCarFail(){
+        GeneralMotors gm = new GeneralMotors();
+        gm.raisePickup();
+
+        Car car = new Volvo240(Car.Dir.LEFT, new Point2D.Double(11,11));
+        assertFalse(gm.pickUpCar(car));
+    }
+
+    @Test
+    public void generalMotorsMove(){
+        GeneralMotors gm = new GeneralMotors();
+        gm.raisePickup();
+        gm.pickUpCar(new Volvo240());
+        gm.lowerPickup();
+        gm.startEngine();
+        gm.move();
+
+        Point2D.Double pos = gm.getPosition();
+        boolean tmp = true;
+        for(Car car : gm.cars){
+            tmp &= car.getPosition() == pos;
+        }
+
+        assertTrue(tmp);
+    }
+
+    @Test
+    public void noCarLostInWorkshop() {
+        Workshop<Car> ws = new Workshop(cars.size());
+        for (Car car : cars) {
+            ws.addCar(car);
+        }
+        assertEquals(ws.carAmount(), cars.size());
+    }
+    
+    @Test
+    public void workshopCarsInRightOrder(){
+        boolean tmp = true;
+        Workshop<Car> ws = new Workshop(cars.size());
+        for (Car car : cars) {
+            ws.addCar(car);
+        }
+        for(int i = cars.size() - 1; i >= 0; i--){
+            tmp &= cars.get(i) == ws.getCar(ws.carAmount()-1);
+        }
+        assertTrue(tmp);
+    }
+    
+    @Test
+    public void scaniaConstructorGetterSetter(){
+        Scania s = new Scania();
+        s.getMaxAngle();
+        s.getMinAngle();
+        s.getPickUpIncrement();
+
+    }
+    public void generalConstructorGetterSetter(){
+        GeneralMotors m = new GeneralMotors();
     }
 
 }

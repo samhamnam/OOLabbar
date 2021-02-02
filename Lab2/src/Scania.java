@@ -2,12 +2,16 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class Scania extends Truck {
+    static final int maxAngle = 70;
+    static final int minAngle = 0;
+    static final int pickupSpeed = 10;
+
     /**
      * Returns a Scania with default options.
      * @return Scania
      */
     public Scania() {
-        super(2, Color.red,500,"src.Scania");
+        super(2, Color.red,500,"src.Scania", minAngle, maxAngle);
     }
 
     /**
@@ -17,7 +21,7 @@ public class Scania extends Truck {
      * @return Scania
      */
     public Scania(Car.Dir dir, Point2D.Double pos) {
-        super(2,Color.blue,500,"src.Scania",dir,pos);
+        super(2,Color.blue,500,"src.Scania",pickupSpeed,minAngle,maxAngle,dir,pos);
     }
 
     /**
@@ -26,6 +30,6 @@ public class Scania extends Truck {
      */
     @Override
     double speedFactor() {
-        return enginePower * 0.01;
+        return getEnginePower() * 0.01;
     }
 }

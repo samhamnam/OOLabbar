@@ -4,14 +4,15 @@ import java.util.Stack;
 
 public class GeneralMotors extends Truck {
     Stack<Car> cars = new Stack<>();
+    static final int maxAngle = 70;
+    static final int minAngle = 0;
 
     /**
      * Returns a GeneralMotors with default options.
      * @return GeneralMotors
      */
     public GeneralMotors() {
-        super(2, Color.red,500,"src.GeneralMotors");
-        maxAngle = 70;
+        super(2,Color.blue,500,"src.GeneralMotors",maxAngle,minAngle,maxAngle,Car.Dir.LEFT,new Point2D.Double(0,0));
     }
 
     /**
@@ -21,8 +22,7 @@ public class GeneralMotors extends Truck {
      * @return GeneralMotors
      */
     public GeneralMotors(Car.Dir dir, Point2D.Double pos) {
-        super(2,Color.blue,500,"src.GeneralMotors",dir,pos);
-        maxAngle = 70;
+        super(2,Color.blue,500,"src.GeneralMotors",10,0,70,dir,pos);
     }
 
     /**
@@ -31,27 +31,7 @@ public class GeneralMotors extends Truck {
      */
     @Override
     double speedFactor() {
-        return enginePower * 0.01;
-    }
-
-    /**
-     * Raises the truckbed.
-     * @param amount: amount to increment the angle by in degrees by.
-     * @return void
-     */
-    public void raisePickup(double amount){
-        if(currentSpeed == 0)
-            truckbedAngle = maxAngle;
-    }
-
-    /**
-     * Lowers the truckbed.
-     * @param amount: amount to decrement the angle by in degrees by.
-     * @return void
-     */
-    public void lowerPickup(double amount){
-        if(currentSpeed == 0)
-            truckbedAngle = minAngle;
+        return getEnginePower() * 0.01;
     }
 
     /**
@@ -59,28 +39,29 @@ public class GeneralMotors extends Truck {
      * @param car: the car in question.
      * @return void
      */
-    public void pickUpCar(Car car){
+    public boolean pickUpCar(Car car){
         if(car != this){
-            if (truckbedAngle == maxAngle) {
+            if (getTruckbedAngle() == getMaxAngle()) {
                 double distance = Math.sqrt(
-                        Math.pow(car.position.x - position.x,2) +
-                                Math.pow(car.position.y - position.y,2)
+                        Math.pow(car.getPosition().x - getPosition().x,2) +
+                                Math.pow(car.getPosition().y - getPosition().y,2)
                 );
 
                 if(distance < 10) {
                     cars.push(car);
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     /**
      * Removes a car from the pickup truck.
      * @return car
      */
-    // TODO kanske inte ska returnera?
     public Car dropOffCar(){
-        if (truckbedAngle == maxAngle)
+        if (getTruckbedAngle() == getMaxAngle() && cars.size() != 0)
             return cars.pop();
         return null;
     }
@@ -91,14 +72,9 @@ public class GeneralMotors extends Truck {
      */
     @Override
     public void move() {
-        switch(direction) {
-            case UP: position.y += speedFactor(); break;
-            case DOWN: position.y -= speedFactor(); break;
-            case LEFT: position.x -= speedFactor(); break;
-            case RIGHT: position.x += speedFactor(); break;
-        }
+        super.move();
         for(Car car : cars){
-            car.position = position;
+            car.setPosition(getPosition());
         }
     }
 }
