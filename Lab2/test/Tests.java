@@ -257,7 +257,6 @@ public class Tests {
         for (Car car : cars) {
             car.setPosition(new Point2D.Double(x, y));
             tmp &= gm.pickUpCar(car);
-
         }
         assertTrue(tmp);
     }

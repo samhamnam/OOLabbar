@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Workshop <T extends Car>{
-    private final ArrayList<T> cars;
-    private final int limit;
+    private final ArrayList<T> cars; // The cars stored in the workshop.
+    private final int limit; // The max amount of cars stored.
 
     /**
      * Returns the amount of cars in the workshop.
@@ -15,7 +15,6 @@ public class Workshop <T extends Car>{
     /**
      * A workshop containing cars.
      * @param limit: the maximum amount of cars it can contain.
-     * @return Workshop
      */
     public Workshop(int limit) {
         cars = new ArrayList<>();
@@ -25,7 +24,6 @@ public class Workshop <T extends Car>{
     /**
      * Adds a car to the workshop as long as it doesn't contain to many.
      * @param car: the car in question.
-     * @return void
      */
     public void addCar(T car){
         if(cars.size() < limit)
@@ -35,7 +33,7 @@ public class Workshop <T extends Car>{
     /**
      * Returns the car at the specified index.
      * @param index: the car to return.
-     * @return car
+     * @return Car
      */
     public T getCar(int index){
         return cars.remove(index);

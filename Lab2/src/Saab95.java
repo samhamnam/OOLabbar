@@ -2,8 +2,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class Saab95 extends Car {
-    private boolean turboOn;
-
+    private boolean turboOn; // The Saabs fancy turbo mode.
 
     /**
      * Get the turbo status.
@@ -15,7 +14,6 @@ public class Saab95 extends Car {
 
     /**
      * Returns a Saab95 with default options.
-     * @return Saab95
      */
     public Saab95() {
         super(2,Color.red,125,"src.Saab95");
@@ -26,7 +24,6 @@ public class Saab95 extends Car {
      * Returns a car with the specified position and direction.
      * @param dir: The direction to spawn in.
      * @param pos: Floating point position.
-     * @return Saab95
      */
     public Saab95(Car.Dir dir, Point2D.Double pos) {
         super(2,Color.red,125,"src.Saab95",dir,pos);
@@ -35,14 +32,12 @@ public class Saab95 extends Car {
 
     /**
      * Turns on turbo
-     * @return void
      */
     public void setTurboOn(){
 	    turboOn = true;
     }
     /**
      * Turns off turbo
-     * @return void
      */
     public void setTurboOff(){
 	    turboOn = false;

@@ -45,59 +45,115 @@ public abstract class Car implements Movable {
         this.position = position;
         stopEngine();
     }
-
+    /**
+     * Returns the number of doors
+     * @return int
+     */
     public int getNrDoors(){
         return nrDoors;
     }
+    /**
+     * Returns the power of the engine
+     * @return double
+     */
     public double getEnginePower(){
         return enginePower;
     }
+    /**
+     * Returns the speed of the car
+     * @return double
+     */
     public double getCurrentSpeed(){
         return currentSpeed;
     }
+
+    /**
+     * Sets the speed of the car
+     * @param amount: amount to set currentSpeed to.
+     */
     public void setCurrentSpeed(double amount) {
         this.currentSpeed = clamp(amount,0,enginePower);
     }
+    /**
+     * returns the color of the car
+     * @return Color
+     */
     public Color getColor(){
         return color;
     }
+    /**
+     * Sets the color of the car
+     * @param clr The colo of the car
+     */
     public void setColor(Color clr){
         color = clr;
     }
+
+    /**
+     * Gets the position of the car.
+     * @return Point2D.Double
+     */
     public Point2D.Double getPosition() {
         return position;
     }
+    /**
+     * Returns the direction.
+     * @return Dir
+     */
     public Dir getDirection() {return direction;}
+    /**
+     * Returns the name of the model.
+     * @return String
+     */
     public String getModelName() {
         return modelName;
     }
-
+    /**
+     * Sets the numbers of doors of the car.
+     * @param nrDoors number of doors to set to.
+     */
     public void setNrDoors(int nrDoors) {
         this.nrDoors = nrDoors;
     }
+    /**
+     * Sets the power of the engine.
+     * @param enginePower the amount to set the the power of the engine to.
+     */
     public void setEnginePower(double enginePower) {
         this.enginePower = enginePower;
     }
+    /**
+     * Sets the car's model name
+     * @param modelName the new name of which to set the model name to.
+     */
     public void setModelName(String modelName) {
         this.modelName = modelName;
     }
+
+    /**
+     * Sets the direction of the car
+     * @param direction the new direction of the car
+     */
     public void setDirection(Dir direction) {
         this.direction = direction;
     }
+
+    /**
+     * Sets the position of the car
+     * @param position the new position of the car
+     */
     public void setPosition(Point2D.Double position) {
         this.position = position;
     }
 
     /**
      * Starts the car.
-     * @return void
      */
     public void startEngine() {
         currentSpeed = 0.1;
     }
     /**
      * Stops the car.
-     * @return void
      */
     public void stopEngine(){
         currentSpeed = 0;
@@ -105,49 +161,46 @@ public abstract class Car implements Movable {
 
     /**
      * How speed is calculated.
-     * @return void
      */
     abstract double speedFactor();
 
     /**
      * Move the car in the current direction.
-     * @return void
      */
     public void move() {
-        switch(direction) {
-            case UP: position.y += speedFactor(); break;
-            case DOWN: position.y -= speedFactor(); break;
-            case LEFT: position.x -= speedFactor(); break;
-            case RIGHT: position.x += speedFactor(); break;
-        }
+        double radDir = getDirectionToRad(direction);
+        position.x = Math.cos(radDir);
+        position.y = Math.sin(radDir);
+    }
+
+    private double getDirectionToRad(Dir dir){
+        double d = dir.ordinal() / (Dir.values().length - 1.0);
+        return d * 2 * Math.PI;
     }
 
     /**
      * Turns the car left.
-     * @return void
      */
     public void turnLeft() {
         int dir = direction.ordinal();
         dir -= 1;
-        if(dir < 0) dir = 3;
+        if(dir < 0) dir = Dir.values().length - 1;
         direction = Dir.values()[dir];
     }
 
     /**
      * Turns the car right.
-     * @return void
      */
     public void turnRight() {
         int dir = direction.ordinal();
         dir += 1;
-        if(dir > 3) dir = 0;
+        if(dir > Dir.values().length - 1) dir = 0;
         direction = Dir.values()[dir];
     }
 
     /**
      * Increment the speed.
      * @param amount: amount to increment by.
-     * @return void
      */
     public void incrementSpeed(double amount) {
         setCurrentSpeed(getCurrentSpeed() + speedFactor() * amount);
@@ -156,7 +209,6 @@ public abstract class Car implements Movable {
     /**
      * Decrement the speed.
      * @param amount: amount to decrement by.
-     * @return void
      */
     public void decrementSpeed(double amount) {
         setCurrentSpeed(getCurrentSpeed() - speedFactor() * amount);
@@ -165,7 +217,6 @@ public abstract class Car implements Movable {
     /**
      * Speed up the car.
      * @param amount: change amount.
-     * @return void
      */
     public void gas(double amount) {
         amount = clamp(amount, 0,1);
@@ -175,7 +226,6 @@ public abstract class Car implements Movable {
     /**
      * Speed down the car.
      * @param amount: change amount.
-     * @return void
      */
     public void brake(double amount) {
         amount = clamp(amount, 0, 1);

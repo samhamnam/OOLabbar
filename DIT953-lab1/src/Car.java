@@ -5,7 +5,6 @@ import org.junit.Ignore;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-
 /**
  * @author      Lukas Gartman, Samuel Hammersberg, Kristoffer Gustafsson.
  * @version     1.0
@@ -68,7 +67,7 @@ public abstract class Car implements Movable {
     public Point2D.Double getPosition() {
         return position;
     }
-    public Dir getDirection() {return direction;}
+    public Dir getDirection() { return direction; }
 
 
     /**

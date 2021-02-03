@@ -3,13 +3,12 @@ import java.awt.geom.Point2D;
 import java.util.Stack;
 
 public class GeneralMotors extends Truck {
-    Stack<Car> cars = new Stack<>();
-    static final int maxAngle = 70;
-    static final int minAngle = 0;
+    Stack<Car> cars = new Stack<>(); // Where picked up cars are stored
+    static final int maxAngle = 70; // Max angle of the truckbed.
+    static final int minAngle = 0; // Min angle of the truckbed
 
     /**
      * Returns a GeneralMotors with default options.
-     * @return GeneralMotors
      */
     public GeneralMotors() {
         super(2,Color.blue,500,"src.GeneralMotors",maxAngle,minAngle,maxAngle,Car.Dir.LEFT,new Point2D.Double(0,0));
@@ -19,10 +18,9 @@ public class GeneralMotors extends Truck {
      * Returns a car with the specified position and direction.
      * @param dir: The direction to spawn in.
      * @param pos: Floating point position.
-     * @return GeneralMotors
      */
     public GeneralMotors(Car.Dir dir, Point2D.Double pos) {
-        super(2,Color.blue,500,"src.GeneralMotors",10,0,70,dir,pos);
+        super(2,Color.blue,500,"src.GeneralMotors",maxAngle,minAngle,maxAngle,dir,pos);
     }
 
     /**
@@ -37,7 +35,7 @@ public class GeneralMotors extends Truck {
     /**
      * Adds a car to the pickup truck, if its close enough and the truckbed is down.
      * @param car: the car in question.
-     * @return void
+     * @return boolean
      */
     public boolean pickUpCar(Car car){
         if(car != this){
@@ -58,7 +56,7 @@ public class GeneralMotors extends Truck {
 
     /**
      * Removes a car from the pickup truck.
-     * @return car
+     * @return Car
      */
     public Car dropOffCar(){
         if (getTruckbedAngle() == getMaxAngle() && cars.size() != 0)
@@ -68,7 +66,6 @@ public class GeneralMotors extends Truck {
 
     /**
      * Move the car in the current direction, and all cars currently being moved.
-     * @return void
      */
     @Override
     public void move() {
