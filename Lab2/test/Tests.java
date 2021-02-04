@@ -8,7 +8,6 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-
 public class Tests {
     static final Random rnd = new Random();
     ArrayList<Car> cars = new ArrayList<>();
@@ -29,8 +28,8 @@ public class Tests {
         return new Point2D.Double(rnd.nextDouble() + rnd.nextInt(), rnd.nextDouble() + rnd.nextInt());
     }
 
-    Car.Dir randomDir() {
-        return Car.Dir.values()[rnd.nextInt(4)];
+    Dir4Navigation.Dir randomDir() {
+        return Dir4Navigation.Dir.values()[rnd.nextInt(4)];
     }
 
 
@@ -38,7 +37,7 @@ public class Tests {
     public void canTurnLeft() {
         boolean tmp = true;
         for (Car car : cars) {
-            tmp = tmp && canTurnAllDirections(car, true);
+            tmp &= canTurnAllDirections(car, true);
         }
         assertTrue(tmp);
     }
@@ -47,7 +46,7 @@ public class Tests {
     public void canTurnRight() {
         boolean tmp = true;
         for (Car car : cars) {
-            tmp = tmp && canTurnAllDirections(car, false);
+            tmp &= canTurnAllDirections(car, false);
         }
         assertTrue(tmp);
     }
@@ -55,25 +54,25 @@ public class Tests {
     boolean canTurnAllDirections(Car car, boolean turnLeft) {
         boolean result = true;
         for (int i = 0; i < 4; i++) {
-            Car.Dir origDir = car.getDirection();
+            Dir4Navigation.Dir origDir = car.getDir4();
 
             if (turnLeft) car.turnLeft();
             else car.turnRight();
 
-            Car.Dir newDir = car.getDirection();
+            Dir4Navigation.Dir newDir = car.getDir4();
 
             switch (origDir) {
                 case LEFT:
-                    result = result && newDir == (turnLeft ? Car.Dir.DOWN : Car.Dir.UP);
-                    break;
-                case RIGHT:
                     result = result && newDir == (turnLeft ? Car.Dir.UP : Car.Dir.DOWN);
                     break;
+                case RIGHT:
+                    result = result && newDir == (turnLeft ? Car.Dir.DOWN : Car.Dir.UP);
+                    break;
                 case UP:
-                    result = result && newDir == (turnLeft ? Car.Dir.LEFT : Car.Dir.RIGHT);
+                    result = result && newDir == (turnLeft ? Car.Dir.RIGHT : Car.Dir.LEFT);
                     break;
                 case DOWN:
-                    result = result && newDir == (turnLeft ? Car.Dir.RIGHT : Car.Dir.LEFT);
+                    result = result && newDir == (turnLeft ? Car.Dir.LEFT : Car.Dir.RIGHT);
                     break;
             }
         }
@@ -83,17 +82,17 @@ public class Tests {
     @Test
     public void turnRightAndLeftTheSameAmountOfTimes() {
         boolean tmp = true;
-        Car.Dir originalDir;
+        Dir4Navigation.Dir originalDir;
         for (int i = 0; i < 6; i++) {
             for (Car car : cars) {
-                originalDir = car.getDirection();
+                originalDir = car.getDir4();
                 for (int j = 0; j < i; j++) {
                     car.turnRight();
                 }
                 for (int j = 0; j < i; j++) {
                     car.turnLeft();
                 }
-                tmp = tmp && (originalDir == car.getDirection());
+                tmp = tmp && (originalDir == car.getDir4());
             }
         }
         assertTrue(tmp);
@@ -150,12 +149,12 @@ public class Tests {
         s1.setNrDoors(newNrDoors);
         s1.setEnginePower(newEnginePower);
         s1.setModelName(newModelName);
-        s1.setDirection(newDir);
+        s1.setDir4(newDir);
 
         boolean nrDoorsApplied = newNrDoors == s1.getNrDoors();
         boolean enginePwrApplied = newEnginePower == s1.getEnginePower();
         boolean modelNameApplied = newModelName.equals(s1.getModelName());
-        boolean directionApplied = newDir == s1.getDirection();
+        boolean directionApplied = newDir == s1.getDir4();
 
 
         assertTrue(
@@ -311,7 +310,7 @@ public class Tests {
 
         Point2D.Double pos = gm.getPosition();
         boolean tmp = true;
-        for(Car car : gm.cars){
+        for(Car car : gm.getCars()){
             tmp &= car.getPosition() == pos;
         }
 
@@ -348,8 +347,12 @@ public class Tests {
         s.getPickUpIncrement();
 
     }
+
+    @Test
     public void generalConstructorGetterSetter(){
         GeneralMotors m = new GeneralMotors();
+        m.getMaxAngle();
+        m.getMinAngle();
+        m.getPickUpIncrement();
     }
-
 }

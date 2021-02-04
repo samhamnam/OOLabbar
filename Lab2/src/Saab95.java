@@ -22,11 +22,10 @@ public class Saab95 extends Car {
 
     /**
      * Returns a car with the specified position and direction.
-     * @param dir: The direction to spawn in.
-     * @param pos: Floating point position.
+     * @param nav The Navigation instance.
      */
-    public Saab95(Car.Dir dir, Point2D.Double pos) {
-        super(2,Color.red,125,"src.Saab95",dir,pos);
+    public Saab95(Navigation nav) {
+        super(2,Color.red,125,"src.Saab95",nav);
 	    turboOn = false;
     }
 

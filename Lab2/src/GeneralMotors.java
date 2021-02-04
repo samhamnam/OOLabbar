@@ -3,24 +3,60 @@ import java.awt.geom.Point2D;
 import java.util.Stack;
 
 public class GeneralMotors extends Truck {
-    Stack<Car> cars = new Stack<>(); // Where picked up cars are stored
-    static final int maxAngle = 70; // Max angle of the truckbed.
-    static final int minAngle = 0; // Min angle of the truckbed
+    private final Stack<Car> cars = new Stack<>(); // Where picked up cars are stored
+
+    /**
+     * Returns the amount of cars stored.
+     * @return int
+     */
+    public int getCarAmount() {
+        return cars.size();
+    }
+
+    /**
+     * Returns a stack of all cars transported.
+     * @return Stack<Car>
+     */
+    public Stack<Car> getCars(){
+        return cars;
+    }
+
+    /**
+     * Returns the max angle for the truckbed.
+     * @return int
+     */
+    int getMaxAngle() {
+        return 70;
+    }
+    /**
+     * Returns the minimum angle for the truckbed.
+     * @return int
+     */
+    int getMinAngle() {
+        return 0;
+    }
+    /**
+     * Returns how much the truck bed's angle is changed on calling raisePickup() and lowerPickup().
+     * @return double
+     */
+    double getPickUpIncrement(){
+        return getMaxAngle();
+    }
+
 
     /**
      * Returns a GeneralMotors with default options.
      */
     public GeneralMotors() {
-        super(2,Color.blue,500,"src.GeneralMotors",maxAngle,minAngle,maxAngle,Car.Dir.LEFT,new Point2D.Double(0,0));
+        super(2,Color.blue,500,"src.GeneralMotors",new Dir4Navigation());
     }
 
     /**
      * Returns a car with the specified position and direction.
-     * @param dir: The direction to spawn in.
-     * @param pos: Floating point position.
+     * @param nav: The Navigation instance.
      */
-    public GeneralMotors(Car.Dir dir, Point2D.Double pos) {
-        super(2,Color.blue,500,"src.GeneralMotors",maxAngle,minAngle,maxAngle,dir,pos);
+    public GeneralMotors(Navigation nav) {
+        super(2,Color.blue,500,"src.GeneralMotors",nav);
     }
 
     /**
@@ -41,8 +77,8 @@ public class GeneralMotors extends Truck {
         if(car != this){
             if (getTruckbedAngle() == getMaxAngle()) {
                 double distance = Math.sqrt(
-                        Math.pow(car.getPosition().x - getPosition().x,2) +
-                                Math.pow(car.getPosition().y - getPosition().y,2)
+                        Math.pow(car.nav.getPosition().x - nav.getPosition().x,2) +
+                                Math.pow(car.nav.getPosition().y - nav.getPosition().y,2)
                 );
 
                 if(distance < 10) {
@@ -71,7 +107,7 @@ public class GeneralMotors extends Truck {
     public void move() {
         super.move();
         for(Car car : cars){
-            car.setPosition(getPosition());
+            car.nav.setPosition(nav.getPosition());
         }
     }
 }

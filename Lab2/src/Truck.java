@@ -3,40 +3,31 @@ import java.awt.geom.Point2D;
 
 
 public abstract class Truck extends Car {
-    private double truckbedAngle; // The current angle of the truckbed.
-    private final int maxAngle; // The maximum angle for the truckbed
-    private final int minAngle; // The minimum angle for the truckbed
-    private double pickUpIncrement;
+    private double truckBedAngle = 0; // Current angle of the truckbed.
 
     /**
      * Returns the max angle for the truckbed.
      * @return int
      */
-    public int getMaxAngle() {
-        return maxAngle;
-    }
+    abstract int getMaxAngle();
     /**
      * Returns the minimum angle for the truckbed.
      * @return int
      */
-    public int getMinAngle() {
-        return minAngle;
-    }
+    abstract int getMinAngle();
     /**
-     * Returns how much the truckbed's angle is changed on calling raisePickup() and lowerPickup().
+     * Returns how much the truck bed's angle is changed on calling raisePickup() and lowerPickup().
      * @return double
      */
-    public double getPickUpIncrement() {
-        return pickUpIncrement;
-    }
+    abstract double getPickUpIncrement();
 
     /**
      * Returns the truckbed angle.
      * @return double
      */
-    public double getTruckbedAngle(){
-        return truckbedAngle;
-    }
+     public double getTruckbedAngle(){
+         return truckBedAngle;
+     }
 
     /**
      * Creates a truck with the following parameters:
@@ -44,13 +35,9 @@ public abstract class Truck extends Car {
      * @param color the color of the truck.
      * @param enginePower how strong the truck engine is.
      * @param name the name of the truck.
-     * @param minAngle the minimum angle of the truckbed.
-     * @param maxAngle the maximum angle of the truckbed.
      */
-    public Truck(int nDoors, Color color,int enginePower,String name, int minAngle,int maxAngle) {
+    public Truck(int nDoors, Color color, int enginePower, String name) {
         super(nDoors,color,enginePower,name);
-        this.maxAngle = maxAngle;
-        this.minAngle = minAngle;
     }
 
     /**
@@ -59,25 +46,17 @@ public abstract class Truck extends Car {
      * @param color the color of the truck.
      * @param enginePower how strong the truck engine is.
      * @param name the name of the truck.
-     * @param pickincr how much the angle changes per increment.
-     * @param minAngle the minimum angle of the truckbed.
-     * @param maxAngle the maximum angle of the truckbed.
-     * @param dir the direction the car should be created in.
-     * @param pos the position the car should be created at.
+     * @param nav The navigation instance.
      */
-    public Truck(int nDoors, Color color, int enginePower, String name,
-                 double pickincr, int minAngle,int maxAngle,Car.Dir dir, Point2D.Double pos) {
-        super(nDoors,color,enginePower,name, dir, pos);
-        pickUpIncrement = pickincr;
-        this.maxAngle = maxAngle;
-        this.minAngle = minAngle;
+    public Truck(int nDoors, Color color, int enginePower, String name, Navigation nav) {
+        super(nDoors,color,enginePower,name, nav);
     }
 
     /**
      * Returns the truckbed angle.
      */
     public void startEngine(){
-        if(truckbedAngle == minAngle)
+        if(getTruckbedAngle() == getMinAngle())
             super.startEngine();
     }
 
@@ -86,18 +65,22 @@ public abstract class Truck extends Car {
      * Raises the truckbed angle.
      */
     public void raisePickup(){
-        if (getCurrentSpeed() == 0){
-            truckbedAngle = clamp(truckbedAngle + pickUpIncrement, minAngle, maxAngle);
+        if (getCurrentSpeed() == 0) {
+            double pickUpIncrement = getPickUpIncrement();
+            double minAngle = getMinAngle();
+            double maxAngle = getMaxAngle();
+            truckBedAngle = clamp(truckBedAngle + pickUpIncrement, minAngle, maxAngle);
         }
     }
     /**
      * Lowers the truckbed angle.
      */
     public void lowerPickup(){
-        if (getCurrentSpeed() == 0){
-            truckbedAngle = clamp(truckbedAngle - pickUpIncrement, minAngle, maxAngle);
+        if (getCurrentSpeed() == 0) {
+            double pickUpIncrement = getPickUpIncrement();
+            double minAngle = getMinAngle();
+            double maxAngle = getMaxAngle();
+            truckBedAngle = clamp(truckBedAngle - pickUpIncrement, minAngle, maxAngle);
         }
     }
-
-
 }

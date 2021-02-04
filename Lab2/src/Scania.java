@@ -2,24 +2,35 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class Scania extends Truck {
-    static final int maxAngle = 70; // Max angle of the truckbed
-    static final int minAngle = 0; // Min angle of the truckbed
-    static final int pickupSpeed = 10; // The angle at which the truckbed is increments at.
+    /**
+     * Returns the max angle for the truckbed.
+     * @return int
+     */
+     int getMaxAngle(){return 70;}
+    /**
+     * Returns the minimum angle for the truckbed.
+     * @return int
+     */
+     int getMinAngle(){return 0;}
+    /**
+     * Returns how much the truck bed's angle is changed on calling raisePickup() and lowerPickup().
+     * @return double
+     */
+     double getPickUpIncrement() {return 10;}
 
     /**
      * Returns a Scania with default options.
      */
     public Scania() {
-        super(2, Color.red,500,"src.Scania", minAngle, maxAngle);
+        super(2, Color.red,500,"src.Scania");
     }
 
     /**
      * Returns a car with the specified position and direction.
-     * @param dir: The direction to spawn in.
-     * @param pos: Floating point position.
+     * @param nav: The Navigation instance handling how it moves.
      */
-    public Scania(Car.Dir dir, Point2D.Double pos) {
-        super(2,Color.blue,500,"src.Scania",pickupSpeed,minAngle,maxAngle,dir,pos);
+    public Scania(Navigation nav) {
+        super(2,Color.blue,500,"src.Scania",nav);
     }
 
     /**
