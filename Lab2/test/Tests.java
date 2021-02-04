@@ -4,35 +4,71 @@ import org.junit.Test;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.NavigableMap;
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
 public class Tests {
     static final Random rnd = new Random();
+    ArrayList<Transporter> allTrasnports = new ArrayList<>();
     ArrayList<Car> cars = new ArrayList<>();
     ArrayList<Truck> trucks = new ArrayList<>();
+    ArrayList<Navigation> navs = new ArrayList<>();
+    ArrayList<Ferry> ferries = new ArrayList<>();
+
+    void addTrucks(ArrayList<Navigation> arg_navs) {
+        for (Navigation nav : arg_navs) {
+            ArrayList<Truck> tmp = new ArrayList<>();
+            tmp.add(new Scania(nav));
+            tmp.add(new GeneralMotors(nav));
+            trucks.addAll(tmp);
+        }
+        cars.addAll(trucks);
+    }
+
+    void addCars(ArrayList<Navigation> arg_navs) {
+        addTrucks( arg_navs);
+        for (Navigation nav : arg_navs) {
+            ArrayList<Car> tmp = new ArrayList<>();
+            tmp.add(new Volvo240(nav));
+            tmp.add(new Saab95(nav));
+            cars.addAll(tmp);
+        }
+        allTrasnports.addAll(cars);
+    }
+    void addFerry(ArrayList<Navigation> arg_navs){
+       for(Navigation nav : arg_navs){
+           ArrayList<Ferry> tmp = new ArrayList<>();
+           tmp.add(new Ferry(nav));
+           ferries.addAll(tmp);
+       }
+       allTrasnports.addAll(ferries);
+    }
+
+    void addTransport(ArrayList<Navigation> arg_navs){
+        addFerry(arg_navs);
+        addCars(arg_navs);
+    }
+    void addNavs(){
+        navs.add(new Dir4Navigation(randomPoint(),randomDir()));
+    }
 
     @Before
     public void start() {
-        trucks.add(new Scania(randomDir(), randomPoint()));
-        trucks.add(new GeneralMotors(randomDir(), randomPoint()));
-
-        cars.addAll(trucks);
-        cars.add(new Volvo240(randomDir(), randomPoint()));
-        cars.add(new Saab95(randomDir(), randomPoint()));
-
+        addNavs();
+        addTransport(navs);
     }
 
     Point2D.Double randomPoint() {
         return new Point2D.Double(rnd.nextDouble() + rnd.nextInt(), rnd.nextDouble() + rnd.nextInt());
     }
 
-    Dir4Navigation.Dir randomDir() {
-        return Dir4Navigation.Dir.values()[rnd.nextInt(4)];
+    double randomDir() {
+        return (rnd.nextDouble() + rnd.nextInt()) % 2;
     }
 
-
+/*
     @Test
     public void canTurnLeft() {
         boolean tmp = true;
@@ -51,48 +87,38 @@ public class Tests {
         assertTrue(tmp);
     }
 
+ */
+
+/*
     boolean canTurnAllDirections(Car car, boolean turnLeft) {
         boolean result = true;
         for (int i = 0; i < 4; i++) {
-            Dir4Navigation.Dir origDir = car.getDir4();
+            double origDir =car.nav.getDirection();
 
             if (turnLeft) car.turnLeft();
             else car.turnRight();
 
-            Dir4Navigation.Dir newDir = car.getDir4();
-
-            switch (origDir) {
-                case LEFT:
-                    result = result && newDir == (turnLeft ? Car.Dir.UP : Car.Dir.DOWN);
-                    break;
-                case RIGHT:
-                    result = result && newDir == (turnLeft ? Car.Dir.DOWN : Car.Dir.UP);
-                    break;
-                case UP:
-                    result = result && newDir == (turnLeft ? Car.Dir.RIGHT : Car.Dir.LEFT);
-                    break;
-                case DOWN:
-                    result = result && newDir == (turnLeft ? Car.Dir.LEFT : Car.Dir.RIGHT);
-                    break;
-            }
+            double newDir = (car.nav.getDirection());
         }
         return result;
     }
 
+ */
+
     @Test
     public void turnRightAndLeftTheSameAmountOfTimes() {
         boolean tmp = true;
-        Dir4Navigation.Dir originalDir;
+        double originalDir;
         for (int i = 0; i < 6; i++) {
             for (Car car : cars) {
-                originalDir = car.getDir4();
+                originalDir = car.nav.getDirection();
                 for (int j = 0; j < i; j++) {
                     car.turnRight();
                 }
                 for (int j = 0; j < i; j++) {
                     car.turnLeft();
                 }
-                tmp = tmp && (originalDir == car.getDir4());
+                tmp = tmp && (originalDir == car.nav.getDirection());
             }
         }
         assertTrue(tmp);
@@ -121,21 +147,22 @@ public class Tests {
 
     @Test
     public void testConstructorAndGetters() {
-        Car.Dir dir = Car.Dir.RIGHT;
-        Point2D.Double pos = new Point2D.Double(0, 0);
+        Navigation nav1 = new Dir4Navigation(randomPoint(),randomDir());
+        Navigation nav2 = new Dir4Navigation(randomPoint(),randomDir());
 
-        Car v1 = new Volvo240();
-        Car s1 = new Saab95();
 
-        Car v2 = new Volvo240(dir, pos);
-        Car s2 = new Saab95(dir, pos);
+        Car v1 = new Volvo240(nav1);
+        Car s1 = new Saab95(nav2);
+
+        Car v2 = new Volvo240(nav1);
+        Car s2 = new Saab95(nav2);
 
         boolean doors = v1.getNrDoors() == v2.getNrDoors() && s1.getNrDoors() == s2.getNrDoors();
         boolean enginePower = v1.getEnginePower() == v2.getEnginePower() && s1.getEnginePower() == s2.getEnginePower();
         boolean currentSpeed = v1.getCurrentSpeed() == v2.getCurrentSpeed() && s1.getCurrentSpeed() == s2.getCurrentSpeed();
         boolean color = v1.getColor() == v2.getColor() && s1.getColor() == s2.getColor();
-        boolean direction = v1.getDirection() == v2.getDirection() && s1.getDirection() == s2.getDirection();
-        boolean position = v1.getPosition().equals(v2.getPosition()) && s1.getPosition().equals(s2.getPosition());
+        boolean direction = v1.nav.getDirection() == v2.nav.getDirection() && s1.nav.getDirection() == s2.nav.getDirection();
+        boolean position = v1.nav.getPosition().equals(v2.nav.getPosition()) && s1.nav.getPosition().equals(s2.nav.getPosition());
 
         Color testColor = Color.GREEN;
         s1.setColor(testColor);
@@ -145,16 +172,16 @@ public class Tests {
         int newNrDoors = 20;
         int newEnginePower = 1000;
         String newModelName = "test";
-        Car.Dir newDir = Car.Dir.UP;
+        double newDir = 1 / 2.0;
         s1.setNrDoors(newNrDoors);
         s1.setEnginePower(newEnginePower);
         s1.setModelName(newModelName);
-        s1.setDir4(newDir);
+        s1.nav.setDirection(newDir);
 
         boolean nrDoorsApplied = newNrDoors == s1.getNrDoors();
         boolean enginePwrApplied = newEnginePower == s1.getEnginePower();
         boolean modelNameApplied = newModelName.equals(s1.getModelName());
-        boolean directionApplied = newDir == s1.getDir4();
+        boolean directionApplied = newDir == s1.nav.getDirection();
 
 
         assertTrue(
@@ -193,12 +220,12 @@ public class Tests {
     public void moveInACircleLeftToOrigin() {
         boolean tmp = true;
         for (Car car : cars) {
-            Point2D.Double origin = car.getPosition();
+            Point2D.Double origin = car.nav.getPosition();
             for (int i = 0; i < 4; i++) {
                 car.turnLeft();
                 car.move();
             }
-            tmp = tmp && origin.equals(car.getPosition());
+            tmp = tmp && origin.equals(car.nav.getPosition());
         }
         assertTrue(tmp);
     }
@@ -207,12 +234,12 @@ public class Tests {
     public void moveInACircleRightToOrigin() {
         boolean tmp = true;
         for (Car car : cars) {
-            Point2D.Double origin = car.getPosition();
+            Point2D.Double origin = car.nav.getPosition();
             for (int i = 0; i < 4; i++) {
                 car.turnRight();
                 car.move();
             }
-            tmp = tmp && origin.equals(car.getPosition());
+            tmp = tmp && origin.equals(car.nav.getPosition());
         }
         assertTrue(tmp);
     }
@@ -250,11 +277,11 @@ public class Tests {
     public void GeneralMotorsPickUpAllCarClose() {
         int x = rnd.nextInt();
         int y = rnd.nextInt();
-        GeneralMotors gm = new GeneralMotors(randomDir(), new Point2D.Double(x, y));
+        GeneralMotors gm = new GeneralMotors(new Dir4Navigation(new Point2D.Double(x,y),randomDir()));
         gm.raisePickup();
         boolean tmp = true;
         for (Car car : cars) {
-            car.setPosition(new Point2D.Double(x, y));
+            car.nav.setPosition(new Point2D.Double(x, y));
             tmp &= gm.pickUpCar(car);
         }
         assertTrue(tmp);
@@ -291,16 +318,17 @@ public class Tests {
     }
 
     @Test
-    public void generalMotorsPickUpCarFail(){
+    public void generalMotorsPickUpCarFail() {
         GeneralMotors gm = new GeneralMotors();
         gm.raisePickup();
+        Navigation nav = new Dir4Navigation(randomPoint(),randomDir());
 
-        Car car = new Volvo240(Car.Dir.LEFT, new Point2D.Double(11,11));
+        Car car = new Volvo240(nav);
         assertFalse(gm.pickUpCar(car));
     }
 
     @Test
-    public void generalMotorsMove(){
+    public void generalMotorsMove() {
         GeneralMotors gm = new GeneralMotors();
         gm.raisePickup();
         gm.pickUpCar(new Volvo240());
@@ -308,10 +336,10 @@ public class Tests {
         gm.startEngine();
         gm.move();
 
-        Point2D.Double pos = gm.getPosition();
+        Point2D.Double pos = gm.nav.getPosition();
         boolean tmp = true;
-        for(Car car : gm.getCars()){
-            tmp &= car.getPosition() == pos;
+        for (Car car : gm.getCars()) {
+            tmp &= car.nav.getPosition() == pos;
         }
 
         assertTrue(tmp);
@@ -325,22 +353,22 @@ public class Tests {
         }
         assertEquals(ws.carAmount(), cars.size());
     }
-    
+
     @Test
-    public void workshopCarsInRightOrder(){
+    public void workshopCarsInRightOrder() {
         boolean tmp = true;
         Workshop<Car> ws = new Workshop(cars.size());
         for (Car car : cars) {
             ws.addCar(car);
         }
-        for(int i = cars.size() - 1; i >= 0; i--){
-            tmp &= cars.get(i) == ws.getCar(ws.carAmount()-1);
+        for (int i = cars.size() - 1; i >= 0; i--) {
+            tmp &= cars.get(i) == ws.getCar(ws.carAmount() - 1);
         }
         assertTrue(tmp);
     }
-    
+
     @Test
-    public void scaniaConstructorGetterSetter(){
+    public void scaniaConstructorGetterSetter() {
         Scania s = new Scania();
         s.getMaxAngle();
         s.getMinAngle();
@@ -349,7 +377,7 @@ public class Tests {
     }
 
     @Test
-    public void generalConstructorGetterSetter(){
+    public void generalConstructorGetterSetter() {
         GeneralMotors m = new GeneralMotors();
         m.getMaxAngle();
         m.getMinAngle();
