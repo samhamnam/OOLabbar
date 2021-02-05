@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Workshop <T extends Car>{
+public class Workshop <T extends Car> {
 //    private final ArrayList<T> cars; // The cars stored in the workshop.
     private final CarLoader<T> cars = new CarLoader<>(true);
     private final int limit; // The max amount of cars stored.
@@ -32,12 +32,9 @@ public class Workshop <T extends Car>{
 
     /**
      * Returns the car at the specified index.
-     * @param index: the car to return.
      * @return Car
      */
-    public T getCar(int index) {
-        return cars.remove(index);
+    public T getCar() {
+        return cars.unload();
     }
-
-
 }

@@ -1,39 +1,39 @@
-import java.awt.geom.Point2D;
-
-public class Ferry extends Transporter {
+ public class Ferry extends Transporter {
     private final CarLoader<Car> cars = new CarLoader<>(true);
 
-    Ferry(Navigation nav) {
+      Ferry() {
+        super(new Dir4Navigation());
+     }
+
+    /**
+     * Creates a ferry with the specified Navigation.
+     * @param nav The navigation instance.
+     */
+     Ferry(Navigation nav) {
         super(nav);
     }
 
-//    @Override
-//    public void turnLeft() {
-//
-//    }
-//
-//    @Override
-//    public void turnRight() {
-//
-//    }
-
+    /**
+     * Returns the speedFactor.
+     * @return double
+     */
     @Override
     double speedFactor() {
-        return 0;
+        return 10;
     }
 
     /**
      * Load a car onto the ferry.
      * @param car: The car to be loaded.
      */
-    public void load(Car car) {
+     void load(Car car) {
         cars.load(car);
     }
 
     /**
      * Unload a car from the ferry.
      */
-    public void unload() {
-        cars.unload();
+     Car unload() {
+        return cars.unload();
     }
 }

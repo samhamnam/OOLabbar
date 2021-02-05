@@ -21,7 +21,7 @@ public class Scania extends Truck {
     /**
      * Returns a Scania with default options.
      */
-    public Scania() {
+    Scania() {
         super(2, Color.red,500,"src.Scania");
     }
 
@@ -29,7 +29,7 @@ public class Scania extends Truck {
      * Returns a car with the specified position and direction.
      * @param nav: The Navigation instance handling how it moves.
      */
-    public Scania(Navigation nav) {
+    Scania(Navigation nav) {
         super(2,Color.blue,500,"src.Scania",nav);
     }
 

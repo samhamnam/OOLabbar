@@ -88,36 +88,34 @@ public class Tests {
 
  */
 
-/*
+
     boolean canTurnAllDirections(Car car, boolean turnLeft) {
         boolean result = true;
-        for (int i = 0; i < 4; i++) {
-            double origDir =car.nav.getDirection();
-
+        for (int i = 0; i < 2*Math.PI/car.nav.getTurnRate(); i++) {
+            double origDir = car.nav.getDirection();
             if (turnLeft) car.turnLeft();
             else car.turnRight();
-
             double newDir = (car.nav.getDirection());
+            result &= origDir == newDir - car.nav.getTurnRate();
         }
         return result;
     }
 
- */
+
 
     @Test
     public void turnRightAndLeftTheSameAmountOfTimes() {
         boolean tmp = true;
-        double originalDir;
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 10 + rnd.nextInt(50); i++) {
             for (Car car : cars) {
-                originalDir = car.nav.getDirection();
+                double originalDir = car.nav.getDirection();
                 for (int j = 0; j < i; j++) {
                     car.turnRight();
                 }
-                for (int j = 0; j < i; j++) {
+                for (int j = 0; j < i; j++){
                     car.turnLeft();
                 }
-                tmp = tmp && (originalDir == car.nav.getDirection());
+                tmp &= (originalDir == car.nav.getDirection());
             }
         }
         assertTrue(tmp);
@@ -175,12 +173,12 @@ public class Tests {
         s1.setNrDoors(newNrDoors);
         s1.setEnginePower(newEnginePower);
         s1.setModelName(newModelName);
-        s1.nav.setDirection(newDir);
+        s1.nav.setDirectionWithoutPI(newDir);
 
         boolean nrDoorsApplied = newNrDoors == s1.getNrDoors();
         boolean enginePwrApplied = newEnginePower == s1.getEnginePower();
         boolean modelNameApplied = newModelName.equals(s1.getModelName());
-        boolean directionApplied = newDir == s1.nav.getDirection();
+        boolean directionApplied = newDir == s1.nav.getDirection() / Math.PI;
 
 
         assertTrue(
@@ -269,7 +267,6 @@ public class Tests {
     @Test
     public void GeneralMotorsPickUpCarNear() {
         GeneralMotors gm = new GeneralMotors();
-
     }
 
     @Test
@@ -360,8 +357,8 @@ public class Tests {
         for (Car car : cars) {
             ws.addCar(car);
         }
-        for (int i = cars.size() - 1; i >= 0; i--) {
-            tmp &= cars.get(i) == ws.getCar(ws.carAmount() - 1);
+        for (int i = 0; i < cars.size(); i++) {
+            tmp &= cars.get(i) == ws.getCar();
         }
         assertTrue(tmp);
     }
@@ -381,5 +378,50 @@ public class Tests {
         m.getMaxAngle();
         m.getMinAngle();
         m.getPickUpIncrement();
+    }
+
+    @Test
+    public void ferryLoadAndUnloadCar() {
+        Ferry f = new Ferry();
+        Car c = new Volvo240();
+        f.load(c);
+        Car p = f.unload();
+        assertEquals(c,p);
+    }
+
+    @Test
+    public void testFerrySpeedFactor() {
+        Ferry f = new Ferry();
+        assertTrue(f.speedFactor() > 0);
+    }
+
+    @Test
+    public void testNavs() {
+        boolean tmp = true;
+        for (Navigation nav : navs) {
+            nav.setDirectionWithoutPI(0);
+            double orgDir = nav.getDirection();
+            double x = nav.getPosition().x;
+            double y = nav.getPosition().y;
+            Point2D.Double point = new Point2D.Double(x,y);
+            nav.turnLeft();
+            nav.turnRight();
+            tmp &= orgDir == nav.getDirection();
+            nav.move();
+            nav.setDirectionWithoutPI(orgDir + Math.PI);
+            nav.move();
+            nav.move(2);
+            nav.setDirectionWithoutPI(orgDir + Math.PI);
+            nav.move(2);
+            nav.getTurnRate();
+        }
+        assertTrue(tmp);
+    }
+
+    @Test
+    public void testClampExtremes(){
+        boolean max = Transporter.clamp(5,0,3) == 3;
+        boolean min = Transporter.clamp(-3,0,3) == 0;
+        assertTrue(max && min);
     }
 }

@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
  * @version     1.0
  * @since       1.0
  */
-public abstract class Car extends Transporter {
+ public abstract class Car extends Transporter {
     private int nrDoors; // Number of doors on the c
     private double enginePower; // Engine power of the car
     private Color color; // Color of the car
@@ -27,6 +27,7 @@ public abstract class Car extends Transporter {
         this.color = color;
         this.modelName = modelName;
         stopEngine();
+
     }
 
     /**
@@ -109,7 +110,7 @@ public abstract class Car extends Transporter {
      */
      void startEngine() {
         setCurrentSpeed(0.1);
-    }
+     }
     /**
      * Stops the car.
      */

@@ -8,14 +8,6 @@ public class GeneralMotors extends Truck {
     private final CarLoader<Car> cars = new CarLoader<>(false);
 
     /**
-     * Returns the number of cars stored.
-     * @return int
-     */
-    public int getCarAmount() {
-        return cars.getCars().size();
-    }
-
-    /**
      * Returns a deque of all cars transported.
      * @return Stack<Car>
      */
@@ -49,7 +41,7 @@ public class GeneralMotors extends Truck {
     /**
      * Returns a GeneralMotors with default options.
      */
-    public GeneralMotors() {
+     GeneralMotors() {
         super(2,Color.blue,500,"src.GeneralMotors",new Dir4Navigation());
     }
 
@@ -57,7 +49,7 @@ public class GeneralMotors extends Truck {
      * Returns a car with the specified position and direction.
      * @param nav: The Navigation instance.
      */
-    public GeneralMotors(Navigation nav) {
+     GeneralMotors(Navigation nav) {
         super(2,Color.blue,500,"src.GeneralMotors",nav);
     }
 
@@ -75,7 +67,7 @@ public class GeneralMotors extends Truck {
      * @param car: the car in question.
      * @return boolean
      */
-    public boolean pickUpCar(Car car){
+     boolean pickUpCar(Car car){
         if(car != this){
             if (getTruckbedAngle() == getMaxAngle()) {
                 double distance = Math.sqrt(
@@ -96,7 +88,7 @@ public class GeneralMotors extends Truck {
      * Removes a car from the pickup truck.
      * @return Car
      */
-    public Car dropOffCar(){
+     Car dropOffCar(){
         if (getTruckbedAngle() == getMaxAngle() && cars.getCars().size() != 0)
             return cars.unload();
         return null;

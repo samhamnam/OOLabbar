@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 
-public abstract class Truck extends Car {
+  abstract class Truck extends Car {
     private double truckBedAngle = 0; // Current angle of the truckbed.
 
     /**
@@ -53,7 +53,7 @@ public abstract class Truck extends Car {
     }
 
     /**
-     * Returns the truckbed angle.
+     * Starts the engine.
      */
     public void startEngine(){
         if(getTruckbedAngle() == getMinAngle())

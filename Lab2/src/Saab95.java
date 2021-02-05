@@ -8,14 +8,14 @@ public class Saab95 extends Car {
      * Get the turbo status.
      * @return boolean
      */
-    public boolean getTurboOn(){
+    boolean getTurboOn(){
         return turboOn;
     }
 
     /**
      * Returns a Saab95 with default options.
      */
-    public Saab95() {
+    Saab95() {
         super(2,Color.red,125,"src.Saab95");
         turboOn = false;
     }
@@ -24,7 +24,7 @@ public class Saab95 extends Car {
      * Returns a car with the specified position and direction.
      * @param nav The Navigation instance.
      */
-    public Saab95(Navigation nav) {
+    Saab95(Navigation nav) {
         super(2,Color.red,125,"src.Saab95",nav);
 	    turboOn = false;
     }
@@ -32,20 +32,20 @@ public class Saab95 extends Car {
     /**
      * Turns on turbo
      */
-    public void setTurboOn(){
+    void setTurboOn(){
 	    turboOn = true;
     }
     /**
      * Turns off turbo
      */
-    public void setTurboOff(){
+    void setTurboOff(){
 	    turboOn = false;
     }
     /**
      * Returns speedFactor
      * @return double
      */
-    public double speedFactor() {
+    double speedFactor() {
         double turbo = 1;
         if(turboOn) turbo = 1.3;
         return getEnginePower() * 0.01 * turbo;
