@@ -64,44 +64,8 @@ public class Tests {
     }
 
     double randomDir() {
-        return (rnd.nextDouble() + rnd.nextInt()) % 2;
+        return rnd.nextDouble() * 2;
     }
-
-/*
-    @Test
-    public void canTurnLeft() {
-        boolean tmp = true;
-        for (Car car : cars) {
-            tmp &= canTurnAllDirections(car, true);
-        }
-        assertTrue(tmp);
-    }
-
-    @Test
-    public void canTurnRight() {
-        boolean tmp = true;
-        for (Car car : cars) {
-            tmp &= canTurnAllDirections(car, false);
-        }
-        assertTrue(tmp);
-    }
-
- */
-
-
-    boolean canTurnAllDirections(Car car, boolean turnLeft) {
-        boolean result = true;
-        for (int i = 0; i < 2*Math.PI/car.nav.getTurnRate(); i++) {
-            double origDir = car.nav.getDirection();
-            if (turnLeft) car.turnLeft();
-            else car.turnRight();
-            double newDir = (car.nav.getDirection());
-            result &= origDir == newDir - car.nav.getTurnRate();
-        }
-        return result;
-    }
-
-
 
     @Test
     public void turnRightAndLeftTheSameAmountOfTimes() {

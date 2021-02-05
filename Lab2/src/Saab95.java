@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.geom.Point2D;
 
+/**
+ * A Saab95 car with turbo
+ */
 public class Saab95 extends Car {
     private boolean turboOn; // The Saabs fancy turbo mode.
 

@@ -1,15 +1,19 @@
 import java.util.ArrayDeque;
 import java.util.Deque;
 
- public class CarLoader <T extends Car> {
+/**
+ * A storage system for cars that handle loading and unloading.
+ * @param <T> The type of cargo.
+ */
+ public class Loader<T extends Transporter> {
     private Deque<T> cars = new ArrayDeque<>(); // A car container
-    private final boolean fifo; // Whether to use First-In-First-Out method
+    private final boolean fifo; // Whether or not to use the First-In-First-Out method
 
     /**
      * Creates a car loader container.
      * @param fifo: First-in-first-out method
      */
-    CarLoader(boolean fifo) {
+    Loader(boolean fifo) {
         this.fifo = fifo;
     }
 
@@ -37,6 +41,6 @@ import java.util.Deque;
      * @return T
      */
     T unload() {
-        return cars.pop(); // poll() to return null if empty
+        return cars.poll();
     }
 }

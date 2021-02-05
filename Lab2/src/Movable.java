@@ -3,6 +3,10 @@
  * @version     1.0
  * @since       1.0
  */
+
+/**
+ * An interface which represents movable classes.
+ */
 public interface Movable {
     /**
      * Moves the card forward in its direction and speed.

@@ -1,5 +1,8 @@
 import java.awt.geom.Point2D;
 
+/**
+ * A Navigation system with for directions.
+ */
  public class Dir4Navigation extends Navigation {
     /**
      * Coverts a directions to radians.

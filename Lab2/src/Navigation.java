@@ -1,9 +1,12 @@
 import java.awt.geom.Point2D;
 
+/**
+ * A template for Navigation subclasses.
+ */
 public abstract class Navigation {
-    private double direction; // The current direction the transporter is going in.
-    private Point2D.Double position; // The current position of the transporter.
-    private final double turnRate;
+    private double direction; // The current direction.
+    private Point2D.Double position; // The current position.
+    private final double turnRate; // How fast the object turns.
 
     /**
      * Creates a Navigation instance from a position and rotation.
@@ -17,7 +20,7 @@ public abstract class Navigation {
     }
 
     /**
-     * Creates a Navigation unit with default options.
+     * Creates a Navigation instance with default options.
      */
     Navigation() {
         this.position = new Point2D.Double(0,0);
@@ -25,7 +28,7 @@ public abstract class Navigation {
         turnRate = 1/2.0;
     }
     /**
-     * Gets the position of the transporter.
+     * Gets the position.
      * @return Point2D.Double
      */
     Point2D.Double getPosition() {
@@ -38,15 +41,15 @@ public abstract class Navigation {
     double getDirection() { return direction * Math.PI; }
 
     /**
-     * Sets the direction of the transporter
-     * @param direction the new direction of the transporter
+     * Sets the direction.
+     * @param direction the new direction
      */
     void setDirectionWithoutPI(double direction) {
         this.direction = direction;
     }
 
     /**
-     * Sets the position of the transporter
+     * Sets the position
      * @param position the new position of the
      */
     void setPosition(Point2D.Double position) {
@@ -62,17 +65,17 @@ public abstract class Navigation {
     }
 
     /**
-     * Turns the transporter left.
+     * Turns left.
      */
      void turnLeft(){
-        direction = (direction - turnRate);
+        direction -= turnRate;
     }
 
     /**
-     * Turns the transporter right.
+     * Turns right.
      */
     void turnRight(){
-        direction = (direction + turnRate);
+        direction += turnRate;
     }
 
     /**
@@ -84,7 +87,7 @@ public abstract class Navigation {
     }
 
     /**
-     * Move the transporter in the current direction.
+     * Move in the current direction.
      * @param currentSpeed The speed to move at.
      */
     public void move(double currentSpeed) {

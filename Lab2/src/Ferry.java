@@ -1,7 +1,10 @@
+/**
+ * A ferry that is able to hold and transport cars.
+ */
  public class Ferry extends Transporter {
-    private final CarLoader<Car> cars = new CarLoader<>(true);
+    private final Loader<Car> cars = new Loader<>(true);
 
-      Ferry() {
+    Ferry() {
         super(new Dir4Navigation());
      }
 
@@ -35,5 +38,16 @@
      */
      Car unload() {
         return cars.unload();
+    }
+
+    /**
+     * Move the ferry in the current direction, and all cargo currently being moved.
+     */
+    @Override
+    public void move() {
+        super.move();
+        for(Car car : cars.getCars()){
+            car.nav.setPosition(nav.getPosition());
+        }
     }
 }

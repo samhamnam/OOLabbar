@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.geom.Point2D;
 
+/**
+ * A construction truck.
+ */
 public class Scania extends Truck {
     /**
      * Returns the max angle for the truckbed.

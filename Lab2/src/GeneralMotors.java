@@ -1,11 +1,12 @@
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.Deque;
-import java.util.Stack;
 
+/**
+ * A haling truck by General Motors
+ */
 public class GeneralMotors extends Truck {
 //    private final Stack<Car> cars = new Stack<>(); // Where picked up cars are stored
-    private final CarLoader<Car> cars = new CarLoader<>(false);
+    private final Loader<Car> cars = new Loader<>(false);
 
     /**
      * Returns a deque of all cars transported.

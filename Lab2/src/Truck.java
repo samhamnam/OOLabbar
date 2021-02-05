@@ -1,7 +1,8 @@
 import java.awt.*;
-import java.awt.geom.Point2D;
 
-
+/**
+ * A truck with a pickup that can be lowered and raised
+ */
   abstract class Truck extends Car {
     private double truckBedAngle = 0; // Current angle of the truckbed.
 
@@ -25,7 +26,7 @@ import java.awt.geom.Point2D;
      * Returns the truckbed angle.
      * @return double
      */
-     public double getTruckbedAngle(){
+    public double getTruckbedAngle(){
          return truckBedAngle;
      }
 

@@ -1,11 +1,13 @@
 import java.awt.*;
-import java.awt.geom.Point2D;
-
 
 /**
  * @author      Lukas Gartman, Samuel Hammersberg, Kristoffer Gustafsson.
  * @version     1.0
  * @since       1.0
+ */
+
+/**
+ * A basic representation of a Car.
  */
  public abstract class Car extends Transporter {
     private int nrDoors; // Number of doors on the c

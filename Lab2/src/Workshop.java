@@ -1,8 +1,9 @@
-import java.util.ArrayList;
-
+/**
+ * A workshop that can house cars
+ * @param <T> the type of cars that are allowed
+ */
 public class Workshop <T extends Car> {
-//    private final ArrayList<T> cars; // The cars stored in the workshop.
-    private final CarLoader<T> cars = new CarLoader<>(true);
+    private final Loader<T> cars = new Loader<>(true);
     private final int limit; // The max amount of cars stored.
 
     /**

@@ -1,9 +1,13 @@
 import org.junit.Ignore;
 
 import java.awt.geom.Point2D;
+
+/**
+ * A basic concept of transportation
+ */
 public abstract class Transporter implements Movable {
     Navigation nav;
-
+    private double currentSpeed; // The current speed of the transporter
     /**
      * Creates a transporter.
      * @param nav The navigation instance.
@@ -12,7 +16,6 @@ public abstract class Transporter implements Movable {
         this.nav = nav;
     }
 
-    private double currentSpeed; // The current speed of the transporter
 
     /**
      * Returns the speed of the transporter
@@ -104,5 +107,4 @@ public abstract class Transporter implements Movable {
     void decrementSpeed(double amount) {
         setCurrentSpeed(getCurrentSpeed() - speedFactor() * amount);
     }
-
 }
