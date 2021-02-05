@@ -1,24 +1,26 @@
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.Deque;
 import java.util.Stack;
 
 public class GeneralMotors extends Truck {
-    private final Stack<Car> cars = new Stack<>(); // Where picked up cars are stored
+//    private final Stack<Car> cars = new Stack<>(); // Where picked up cars are stored
+    private final CarLoader<Car> cars = new CarLoader<>(false);
 
     /**
-     * Returns the amount of cars stored.
+     * Returns the number of cars stored.
      * @return int
      */
     public int getCarAmount() {
-        return cars.size();
+        return cars.getCars().size();
     }
 
     /**
-     * Returns a stack of all cars transported.
+     * Returns a deque of all cars transported.
      * @return Stack<Car>
      */
-    public Stack<Car> getCars(){
-        return cars;
+    public Deque<Car> getCars(){
+        return cars.getCars();
     }
 
     /**
@@ -69,7 +71,7 @@ public class GeneralMotors extends Truck {
     }
 
     /**
-     * Adds a car to the pickup truck, if its close enough and the truckbed is down.
+     * Adds a car to the pickup truck, if it is close enough and the truck bed is down.
      * @param car: the car in question.
      * @return boolean
      */
@@ -82,7 +84,7 @@ public class GeneralMotors extends Truck {
                 );
 
                 if(distance < 10) {
-                    cars.push(car);
+                    cars.load(car);
                     return true;
                 }
             }
@@ -95,8 +97,8 @@ public class GeneralMotors extends Truck {
      * @return Car
      */
     public Car dropOffCar(){
-        if (getTruckbedAngle() == getMaxAngle() && cars.size() != 0)
-            return cars.pop();
+        if (getTruckbedAngle() == getMaxAngle() && cars.getCars().size() != 0)
+            return cars.unload();
         return null;
     }
 
@@ -106,7 +108,7 @@ public class GeneralMotors extends Truck {
     @Override
     public void move() {
         super.move();
-        for(Car car : cars){
+        for(Car car : cars.getCars()){
             car.nav.setPosition(nav.getPosition());
         }
     }

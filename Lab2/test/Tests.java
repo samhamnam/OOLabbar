@@ -4,14 +4,13 @@ import org.junit.Test;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.NavigableMap;
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
 public class Tests {
     static final Random rnd = new Random();
-    ArrayList<Transporter> allTrasnports = new ArrayList<>();
+    ArrayList<Transporter> allTransports = new ArrayList<>();
     ArrayList<Car> cars = new ArrayList<>();
     ArrayList<Truck> trucks = new ArrayList<>();
     ArrayList<Navigation> navs = new ArrayList<>();
@@ -35,7 +34,7 @@ public class Tests {
             tmp.add(new Saab95(nav));
             cars.addAll(tmp);
         }
-        allTrasnports.addAll(cars);
+        allTransports.addAll(cars);
     }
     void addFerry(ArrayList<Navigation> arg_navs){
        for(Navigation nav : arg_navs){
@@ -43,7 +42,7 @@ public class Tests {
            tmp.add(new Ferry(nav));
            ferries.addAll(tmp);
        }
-       allTrasnports.addAll(ferries);
+       allTransports.addAll(ferries);
     }
 
     void addTransport(ArrayList<Navigation> arg_navs){
