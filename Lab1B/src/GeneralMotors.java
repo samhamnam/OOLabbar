@@ -5,8 +5,7 @@ import java.util.Deque;
  * A haling truck by General Motors
  */
 public class GeneralMotors extends Truck {
-//    private final Stack<Car> cars = new Stack<>(); // Where picked up cars are stored
-    private final Loader<Car> cars = new Loader<>(false);
+    private final Loader<Car> cars = new Loader<>(false); // Where picked up cars are stored
 
     /**
      * Returns a deque of all cars transported.
