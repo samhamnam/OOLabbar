@@ -39,7 +39,7 @@ public class CarController {
         Scania scania = new Scania();
         Saab95 saab95 = new Saab95();
         scania.nav.setPosition(new Point2D.Double(0,100));
-        saab95.nav.setPosition(new Point2D.Double(0,100));
+        saab95.nav.setPosition(new Point2D.Double(0,200));
         cc.cars.add(scania);
         cc.cars.add(saab95);
 
@@ -60,7 +60,7 @@ public class CarController {
                 int x = (int) Math.round(car.nav.getPosition().getX());
                 int y = (int) Math.round(car.nav.getPosition().getY());
 
-                if(x < 0 || x > 690|| y < 0 || y > 700){
+                if (x < 0 || x > 690 || y < 0 || y > 700) {
                     car.nav.setPosition(new Point2D.Double(Car.clamp(x,0,690),Car.clamp(y,0,700)));
                     car.turnLeft();
                     car.turnLeft();
@@ -68,8 +68,6 @@ public class CarController {
                     car.startEngine();
                 }
 
-
-                frame.drawPanel.moveit(x, y);
                 // repaint() calls the paintComponent method of the panel
                 frame.drawPanel.repaint();
             }
@@ -84,10 +82,43 @@ public class CarController {
         }
     }
 
-    void brake (int amount){
+    void brake (int amount) {
         double gas = ((double) amount) / 100;
         for (Car car : cars) {
             car.brake(gas);
+        }
+    }
+
+
+    void turboOn(){
+        for (Car car : cars) {
+            if(car instanceof Saab95){
+                ((Saab95)car).setTurboOn();
+            }
+        }
+    }
+
+    void turboOff(){
+        for (Car car : cars) {
+            if(car instanceof Saab95){
+                ((Saab95) car).setTurboOff();
+            }
+        }
+    }
+
+    void pickupUp(){
+        for (Car car : cars) {
+            if(car instanceof Truck){
+                ((Truck) car).raisePickup();
+            }
+        }
+    }
+
+    void pickupDown(){
+        for (Car car : cars) {
+            if(car instanceof Truck){
+                ((Truck) car).lowerPickup();
+            }
         }
     }
 }

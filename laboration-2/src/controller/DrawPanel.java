@@ -1,52 +1,34 @@
 package controller;
 
 import cars.Car;
+import util.Tuple;
+import java.awt.image.BufferedImage;
+import util.PictureLoader;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
 import javax.swing.*;
 
 // This panel represent the animated part of the view with the car images.
 
-public class DrawPanel extends JPanel{
-
-    HashMap<Car, BufferedImage> hm = new HashMap<>();
+public class DrawPanel extends JPanel {
 
     // Just a single image, TODO: Generalize
-    BufferedImage volvoImage;
-    // To keep track of a singel cars position
-    Point volvoPoint = new Point();
 
-    // TODO: Make this general for all cars
-    void moveit(int x, int y){
-        volvoPoint.x = x;
-        volvoPoint.y = y;
-    }
+
+    // To keep track of a singel cars position
+    private Tuple<Car,BufferedImage>[] cars;
 
     // Initializes the panel and reads the images
-    public DrawPanel(int x, int y) {
+    public DrawPanel(int x, int y, ArrayList<Car> carsIn) {
         this.setDoubleBuffered(true);
         this.setPreferredSize(new Dimension(x, y));
-        this.setBackground(Color.green);
-        // Print an error message in case file is not found with a try/catch block
-        try {
-            // You can remove the "pics" part if running outside of IntelliJ and
-            // everything is in the same main folder.
-            // volvoImage = ImageIO.read(new File("cars.Volvo240.jpg"));
+        this.setBackground(Color.pink);
 
-            // Rememember to rightclick src New -> Package -> name: pics -> MOVE *.jpg to pics.
-            // if you are starting in IntelliJ.
-            volvoImage = ImageIO.read(new File("src/pics/Volvo240.jpg"));
-        } catch (IOException ex)
-        {
-            ex.printStackTrace();
+        cars = new Tuple[carsIn.size()];
+        for(int i = 0; i < carsIn.size(); i++){
+            this.cars[i] = new Tuple<>(carsIn.get(i),PictureLoader.getImage(carsIn.get(i)));
         }
-
     }
 
     // This method is called each time the panel updates/refreshes/repaints itself
@@ -54,6 +36,10 @@ public class DrawPanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(volvoImage, volvoPoint.x, volvoPoint.y, null); // see javadoc for more info on the parameters
+        for(Tuple<Car, BufferedImage> car : cars) {
+            int x = (int) Math.round(car.getLeft().nav.getPosition().x);
+            int y = (int) Math.round(car.getLeft().nav.getPosition().y);
+            g.drawImage(car.getRight(), x, y, null);
+        }
     }
 }
