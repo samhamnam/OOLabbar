@@ -8,8 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class PictureLoader {
-    BufferedImage[] pics;
-
     public static BufferedImage getImage(Object c) {
         try {
             return ImageIO.read(new File(getSrcName(c)));
