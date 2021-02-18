@@ -5,6 +5,7 @@
 Denna är ok, den har ett konkret ansvarsområde och delegerar ut ansvaret för
 att knyta ihop bilar och dess bild.
 
+
 **CarView**:\
 *Ansvarsområden*: Hanterar funktionen på alla knappar och innehåller alla knappar.
 Knyter även ihop DrawPanel och en CarController så att det logiska kan kommunicera 
@@ -16,7 +17,6 @@ eftersom det är en sak som skall målas. Dessutom så är knapparna en egen gre
 därför bör de skapas knytas till en händelse någon annan stans.
 
 
-
 **CarController**:\
 *Ansvarsområden*: Hanterar bilarna, och är det som CarView kallar på för att kontrollera bilarna. 
 Är även våran main klass, och hanterar start och tid/uppdatering av programmet,
@@ -26,9 +26,7 @@ om att skicka instruktioner till bilarna. Det värsta brottet mot SoC är att de
 uppdateringen av spelet. Detta skapar följdproblemet att den logiska biten nu måste hantera även det visuella 
 då detta är knytet till uppdatering av programmet. 
 
+<!--
 **Bilar**:\
-*Ansvarsområden*: bra :) yayy! jätte bäst :-) (^:
-
-```java
-int k = 5;
-```
+*Ansvarsområden*: bra :) yayy! jäte best :-) (^:
+-->
