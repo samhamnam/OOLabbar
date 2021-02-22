@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>controller</OriginalElement>
+  <nodes>
+    <node x="266.0" y="0.0">controller.CarController</node>
+    <node x="197.25000000000003" y="346.0">controller.CarView</node>
+    <node x="-19.048543689320354" y="112.23300970873785">controller.DrawPanel</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="controller.CarView" target="controller.CarController">
+      <point x="-18.25" y="-232.0" />
+      <point x="288.50000000000006" y="326.0" />
+      <point x="286.375" y="326.0" />
+      <point x="-61.125" y="148.0" />
+    </edge>
+    <edge source="controller.CarView" target="controller.DrawPanel">
+      <point x="-91.25" y="-232.0" />
+      <point x="215.50000000000003" y="326.0" />
+      <point x="61.5" y="326.0" />
+      <point x="-61.5" y="40.0" />
+    </edge>
+    <edge source="controller.CarController" target="controller.CarView">
+      <point x="20.375" y="148.0" />
+      <point x="367.875" y="326.0" />
+      <point x="361.5" y="326.0" />
+      <point x="54.74999999999999" y="-232.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.944954128440367" x="213.0" y="384.0" />
+  <SelectedNodes>
+    <node>controller.DrawPanel</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
