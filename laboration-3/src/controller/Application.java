@@ -1,49 +1,53 @@
 package controller;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.HashSet;
 
 public class Application<Event, Paintable> {
-    public Application(IModel<Event, Paintable>[] models) {
-        this.models = models;
+    private final IModel<Event, Paintable>[] models;
+    private final IWindow<Paintable> window;
+    private final HashSet<IView<Paintable>> views;
 
+    private final Timer timer = new Timer(16, new TimerListener());
+
+    public Application(IModel<Event, Paintable>[] models, IWindow<Paintable> window) {
+        this.models = models;
+        this.window = window;
         views = new HashSet<>();
         for(IModel<Event, Paintable> model : models) {
-            views.add(model.getView());
+            views.addAll(Arrays.asList(model.getViews()));
         }
+        for(IView<Paintable> view : views){
+            window.add(view.getPanel());
+        }
+
     }
 
-    private final IModel<Event, Paintable>[] models;
-    private final Set<IView<Paintable>> views;
-
-    private boolean run = true;
-
     public void run() {
-
-
-        run = true;
-        while(run){
-            update();
-        }
+        timer.start();
     }
 
     private void update() {
-        ArrayList<Paintable> paintables = new ArrayList<>();
         for(IModel<Event,Paintable> model : models) {
-            ArrayList<Event> events = new ArrayList<>();
-            for(IController<Event,Paintable> controller : model.getControllers()) {
-                events.addAll(controller.getEvents());
-                paintables.addAll(controller.getPaintables());
-            }
-            model.update(events);
-            paintables.addAll(model.getPaintables());
-            model.getView().addPaintables(paintables);
+             //model.update();
         }
+        window.repaint();
+
+        System.out.println("Update");
     }
 
     public void quit() {
-        run = false;
+        timer.stop();
+    }
+
+    private class TimerListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            update();
+        }
     }
 }

@@ -68,6 +68,7 @@ public class CarController {
 
                 // repaint() calls the paintComponent method of the panel
                 frame.drawPanel.repaint();
+
             }
         }
     }

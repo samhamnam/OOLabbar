@@ -4,7 +4,7 @@ import cars.Transporter;
 
 import java.util.ArrayList;
 
-public class CarModel implements IModel{
+public class CarModel implements IModel {
     private ArrayList<Transporter> cars = new ArrayList<>();
     IController[] controllers;
     IView view;
@@ -17,16 +17,20 @@ public class CarModel implements IModel{
     public IController[] getControllers(){
         return controllers;
     }
+
+    @Override
+    public IView[] getViews() {
+        return new IView[0];
+    }
+
     public IView getView(){
         return view;
     }
 
-    @Override
     public void update(ArrayList arrayList) {
 
     }
 
-    @Override
     public ArrayList getPaintables() {
         return null;
     }
