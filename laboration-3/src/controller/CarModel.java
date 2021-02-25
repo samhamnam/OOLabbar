@@ -1,37 +1,49 @@
 package controller;
 
 import cars.Transporter;
+import util.PictureLoader;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class CarModel implements IModel {
-    private ArrayList<Transporter> cars = new ArrayList<>();
-    IController[] controllers;
-    IView view;
+public class CarModel<Event extends Integer, Paintable extends JComponent> implements IModel<Event, Paintable> {
+    private final ArrayList<Transporter> cars;
+    private final ArrayList<IController<Event,Paintable>> controllers;
+    private final ArrayList<IView<Paintable>> views;
 
-    public CarModel(IController[] controllers, IView view){
+    public CarModel(ArrayList<IController<Event,Paintable>> controllers, ArrayList<IView<Paintable>>views, ArrayList<Transporter>cars) {
         this.controllers = controllers;
-        this.view = view;
+        this.views = views;
+        this.cars = cars;
+
+        CarView<Paintable> cv = new CarView<>();
+        cv.addPaintables(getPaintables());
+        views.add(cv);
     }
 
-    public IController[] getControllers(){
+    public ArrayList<IController<Event,Paintable>> getControllers(){
         return controllers;
     }
 
     @Override
-    public IView[] getViews() {
-        return new IView[0];
+    public ArrayList<IView<Paintable>> getViews() {
+        return views;
     }
 
-    public IView getView(){
-        return view;
+    public void update(ArrayList<Event> arrayList) {
+        for (Transporter t : cars){
+            t.move();
+        }
     }
 
-    public void update(ArrayList arrayList) {
-
-    }
-
-    public ArrayList getPaintables() {
-        return null;
+    public ArrayList<Paintable> getPaintables() {
+        ArrayList<Paintable> pictures = new ArrayList<>();
+        for(Transporter t : cars){
+            pictures.add((Paintable) new JLabel(new ImageIcon(PictureLoader.getImage(t))));
+        }
+        return pictures;
     }
 }

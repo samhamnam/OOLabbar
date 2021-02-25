@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CarWindow <Paintable extends JComponent>  extends JFrame implements IWindow<Paintable> {
+public class CarWindow <Paintable extends JComponent>  implements IWindow<Paintable> {
     private final JFrame window = new JFrame();
 
     public CarWindow(String title, int x, int y){
@@ -21,17 +21,17 @@ public class CarWindow <Paintable extends JComponent>  extends JFrame implements
 
     @Override
     public void repaint() {
-        super.validate();
-        super.repaint();
+        window.validate();
+        window.repaint();
     }
 
     @Override
     public void add(Paintable p) {
-        super.add(p);
+        window.add(p);
     }
 
     @Override
     public void remove(Paintable p) {
-        super.remove(p);
+        window.remove(p);
     }
 }

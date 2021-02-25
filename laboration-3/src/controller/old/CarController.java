@@ -91,7 +91,7 @@ public class CarController {
 
     void turboOn(){
         for (Car car : cars) {
-            if(car instanceof Saab95){
+            if(car instanceof Saab95) {
                 ((Saab95)car).setTurboOn();
             }
         }
@@ -99,7 +99,7 @@ public class CarController {
 
     void turboOff(){
         for (Car car : cars) {
-            if(car instanceof Saab95){
+            if(car instanceof Saab95) {
                 ((Saab95) car).setTurboOff();
             }
         }
@@ -107,7 +107,7 @@ public class CarController {
 
     void pickupUp(){
         for (Car car : cars) {
-            if(car instanceof Truck){
+            if(car instanceof Truck) {
                 ((Truck) car).raisePickup();
             }
         }
@@ -115,7 +115,7 @@ public class CarController {
 
     void pickupDown(){
         for (Car car : cars) {
-            if(car instanceof Truck){
+            if(car instanceof Truck) {
                 ((Truck) car).lowerPickup();
             }
         }

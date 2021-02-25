@@ -9,20 +9,20 @@ import java.util.Set;
 import java.util.HashSet;
 
 public class Application<Event, Paintable> {
-    private final IModel<Event, Paintable>[] models;
+    private final ArrayList<IModel<Event, Paintable>> models;
     private final IWindow<Paintable> window;
     private final HashSet<IView<Paintable>> views;
 
-    private final Timer timer = new Timer(16, new TimerListener());
+    private final Timer timer = new Timer(100, new TimerListener());
 
-    public Application(IModel<Event, Paintable>[] models, IWindow<Paintable> window) {
+    public Application(ArrayList<IModel<Event, Paintable>> models, IWindow<Paintable> window) {
         this.models = models;
         this.window = window;
         views = new HashSet<>();
         for(IModel<Event, Paintable> model : models) {
-            views.addAll(Arrays.asList(model.getViews()));
+            views.addAll(model.getViews());
         }
-        for(IView<Paintable> view : views){
+        for(IView<Paintable> view : views) {
             window.add(view.getPanel());
         }
 
@@ -33,12 +33,11 @@ public class Application<Event, Paintable> {
     }
 
     private void update() {
+        ArrayList<Event> events = new ArrayList<>();
         for(IModel<Event,Paintable> model : models) {
-             //model.update();
+             model.update(events);
         }
         window.repaint();
-
-        System.out.println("Update");
     }
 
     public void quit() {
