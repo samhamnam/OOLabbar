@@ -7,20 +7,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import controller.CarEvent.Command;
 
-public class CarController<Event, Paintable> implements IController<Event, Paintable> {
-
-
+public class CarController implements IController<CarEvent, JComponent> {
     ArrayList<CarEvent> events = new ArrayList<>();
 
     JSpinner gasSpinner = new JSpinner();
-    JPanel finalPanel;
-    JPanel controlPanel;
-    JPanel gasPanel;
-
-
+    JPanel finalPanel = new JPanel(new GridLayout());
+    JPanel controlPanel = new JPanel(new GridLayout());;
+    JPanel gasPanel = new JPanel(new GridLayout());;
 
     JButton gasButton = new JButton("Gas");
     JButton brakeButton = new JButton("Brake");
@@ -32,30 +28,30 @@ public class CarController<Event, Paintable> implements IController<Event, Paint
     JButton stopButton = new JButton("Stop all cars");
 
 
-
-
     @Override
     public void clearEvents() {
         events.clear();
     }
 
     @Override
-    public ArrayList getEvents() {
+    public ArrayList<CarEvent> getEvents() {
         return events;
     }
 
     @Override
-    public ArrayList getPaintables() {
-        return null;
+    public ArrayList<JComponent> getPaintables() {
+        ArrayList<JComponent> paintables = new ArrayList<>();
+        paintables.add(finalPanel);
+        return paintables;
     }
 
 
     public CarController() {
-        asign();
-        aperence();
+        assign();
+        appearance();
     }
 
-    private void asign(){
+    private void assign(){
         gasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -87,24 +83,24 @@ public class CarController<Event, Paintable> implements IController<Event, Paint
         lowerBedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                events.add(new CarEvent("turbo off",Command.LOWER_BED));
+                events.add(new CarEvent("lower bed",Command.LOWER_BED));
             }
         });
 
         liftBedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                events.add(new CarEvent("turbo off",Command.LIFT_BED));
+                events.add(new CarEvent("lift bed",Command.LIFT_BED));
             }
         });
         gasSpinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                events.add(new CarEvent("turbo off",Command.LIFT_BED));
+                events.add(new CarEvent("gas spin",Command.LIFT_BED));
             }
         });
     }
 
-    private void aperence(){
+    private void appearance(){
         SpinnerModel spinnerModel =
                 new SpinnerNumberModel(0, //initial value
                         0, //min

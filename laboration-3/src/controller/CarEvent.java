@@ -3,7 +3,7 @@ package controller;
 public class CarEvent {
     final private Command command;
     private final String description;
-    private int amount;
+    private double amount;
     public CarEvent(String description,Command command, int amount){
         this.description = description;
         this.amount = amount;
@@ -13,6 +13,14 @@ public class CarEvent {
         this.description = description;
         this.amount = 1;
         this.command = command;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public double getAmount() {
+        return amount;
     }
 
     public enum Command {

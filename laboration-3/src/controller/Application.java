@@ -1,8 +1,10 @@
 package controller;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
@@ -33,9 +35,8 @@ public class Application<Event, Paintable> {
     }
 
     private void update() {
-        ArrayList<Event> events = new ArrayList<>();
         for(IModel<Event,Paintable> model : models) {
-             model.update(events);
+             model.update();
         }
         window.repaint();
     }

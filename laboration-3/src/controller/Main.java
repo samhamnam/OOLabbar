@@ -2,8 +2,12 @@ package controller;
 
 import cars.*;
 import com.sun.jdi.ArrayReference;
+import util.PictureLoader;
+import util.Tuple;
 
+import javax.management.remote.JMXConnectorServerFactory;
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,19 +21,23 @@ public class Main {
     }
 
     public void program(){
-        ArrayList<Transporter> cars = new ArrayList<>();
-        cars.add(new Volvo240());
-        cars.add(new Saab95());
-        cars.add(new Scania());
+        ArrayList<Tuple<Transporter,JLabel>> cars = new ArrayList<>();
+        cars.add(new Tuple<>(new Volvo240(), new JLabel(new ImageIcon(PictureLoader.getImage(new Volvo240())))));
+        cars.add(new Tuple<>(new Saab95(), new JLabel(new ImageIcon(PictureLoader.getImage(new Saab95())))));
+        cars.add(new Tuple<>(new Scania(), new JLabel(new ImageIcon(PictureLoader.getImage(new Scania())))));
 
         ArrayList<IView<JComponent>> carViews = new ArrayList<>();
-        ArrayList<IController<Integer, JComponent>> carControllers = new ArrayList<>();
-        ArrayList<IModel<Integer, JComponent>> models = new ArrayList<>();
-        models.add(new CarModel<>(carControllers, carViews, cars));
+        ArrayList<IView<JComponent>> buttonViews = new ArrayList<>();
 
-        Application<Integer, JComponent> app = new Application<>(
+        ArrayList<IController<CarEvent, JComponent>> carControllers = new ArrayList<>();
+        carControllers.add(new CarController());
+        ArrayList<IModel<CarEvent, JComponent>> models = new ArrayList<>();
+        models.add(new CarModel(carControllers, carViews, cars));
+        models.add(new ButtonModel(carControllers,  buttonViews));
+
+        Application<CarEvent, JComponent> app = new Application<>(
                 models,
-                new CarWindow<>("Car-Sim", 800, 800)
+                new CarWindow("Car-Sim", 800, 800)
         );
         app.run();
     }

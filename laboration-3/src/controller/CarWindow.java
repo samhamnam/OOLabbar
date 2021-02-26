@@ -4,11 +4,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CarWindow <Paintable extends JComponent>  implements IWindow<Paintable> {
+public class CarWindow implements IWindow<JComponent> {
     private final JFrame window = new JFrame();
+    private final JPanel panel = new JPanel();
 
     public CarWindow(String title, int x, int y){
+        panel.setLayout(new GridLayout(2,1));
+
         window.setPreferredSize(new Dimension(x,y));
+        panel.setPreferredSize(new Dimension(x,y));
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         window.setTitle(title);
@@ -16,6 +20,7 @@ public class CarWindow <Paintable extends JComponent>  implements IWindow<Painta
         window.setVisible(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        window.add(panel);
         window.pack();
     }
 
@@ -26,12 +31,12 @@ public class CarWindow <Paintable extends JComponent>  implements IWindow<Painta
     }
 
     @Override
-    public void add(Paintable p) {
-        window.add(p);
+    public void add(JComponent p) {
+        panel.add(p);
     }
 
     @Override
-    public void remove(Paintable p) {
-        window.remove(p);
+    public void remove(JComponent p) {
+        panel.remove(p);
     }
 }
