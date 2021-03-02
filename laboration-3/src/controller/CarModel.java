@@ -1,5 +1,6 @@
 package controller;
 
+import cars.Car;
 import cars.Saab95;
 import cars.Transporter;
 import cars.Truck;
@@ -7,8 +8,8 @@ import controller.CarEvent.Command;
 import util.Tuple;
 
 import javax.swing.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CarModel implements IModel<CarEvent, JComponent> {
     private final ArrayList<Tuple<Transporter, JLabel>> cars;
@@ -16,19 +17,21 @@ public class CarModel implements IModel<CarEvent, JComponent> {
     private final ArrayList<IView<JComponent>> views;
     private EventMatching<Command> EM;
 
+    private double speed = 0;
+
     public CarModel(ArrayList<IController<CarEvent, JComponent>> controllers, ArrayList<IView<JComponent>> views, ArrayList<Tuple<Transporter, JLabel>> cars) {
         this.controllers = controllers;
         this.views = views;
         this.cars = cars;
 
-        CarView cv = new CarView();
-        cv.addPaintables(getPaintables());
-        views.add(cv);
+        views.get(0).addPaintables(getCarPictures());
+
+
         assign();
     }
 
     private void assign() {
-        this.EM = new EventMatching<Command>(Command.values());
+        this.EM = new EventMatching<>(Command.values());
         EM.assign(
                 Command.GAS,
                 this::gas
@@ -53,6 +56,10 @@ public class CarModel implements IModel<CarEvent, JComponent> {
                 Command.TURBO_ON,
                 this::turboOn
         );
+        EM.assign(
+                Command.GAS_SPEED,
+                this::setSpeed
+        );
     }
 
     public ArrayList<IController<CarEvent, JComponent>> getControllers() {
@@ -65,27 +72,38 @@ public class CarModel implements IModel<CarEvent, JComponent> {
     }
 
     public void update() {
-
-        ArrayList<CarEvent> evensts = new ArrayList<>();
-        for(IController controller: controllers){
-            evensts.addAll(controller.getEvents());
+        ArrayList<CarEvent> events = new ArrayList<>();
+        for(IController<CarEvent,JComponent> controller: controllers) {
+            events.addAll(controller.getEvents());
+            controller.clearEvents();
         }
-        for (CarEvent event : evensts) {
+        for (CarEvent event : events) {
             EM.getFunc(event.getCommand()).apply(event.getAmount());
         }
+
         for (Tuple<Transporter, JLabel> t : cars) {
             Transporter car = t.getLeft();
+            JLabel pic = t.getRight();
             car.move();
-            t.getRight().setBounds(
-                    (int) car.nav.getPosition().x,
-                    (int) car.nav.getPosition().y,
-                    100, 60
+
+            int x = (int) Math.round(car.nav.getPosition().getX());
+            int y = (int) Math.round(car.nav.getPosition().getY());
+
+            if (x < 0 || x > 690 || y < 0 || y > 700) {
+                car.nav.setPosition(new Point2D.Double(Car.clamp(x,0,690),Car.clamp(y,0,700)));
+                car.turnLeft();
+                car.turnLeft();
+            }
+
+            pic.setBounds(
+                x,
+                y,
+                100, 60
             );
         }
-
     }
 
-    public ArrayList<JComponent> getPaintables() {
+    public ArrayList<JComponent> getCarPictures() {
         ArrayList<JComponent> carPictures = new ArrayList<>();
         for (Tuple<Transporter, JLabel> t : cars) {
             carPictures.add(t.getRight());
@@ -95,12 +113,11 @@ public class CarModel implements IModel<CarEvent, JComponent> {
 
 
     void gas(double amount) {
-        double gas = ((double) amount) / 100;
+        double gas = ((double) speed) / 100;
         for (Tuple<Transporter, JLabel> t : cars) {
             Transporter car = t.getLeft();
             car.gas(gas);
         }
-        System.out.println("GAS");
     }
 
     void brake(double amount) {
@@ -147,6 +164,8 @@ public class CarModel implements IModel<CarEvent, JComponent> {
             }
         }
     }
-
-
+    void setSpeed(double amount) {
+        speed = amount;
+        System.out.println(amount);
+    }
 }

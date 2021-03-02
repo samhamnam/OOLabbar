@@ -26,7 +26,7 @@ public class DrawPanel extends JPanel {
         this.setBackground(Color.pink);
 
         cars = new Tuple[carsIn.size()];
-        for(int i = 0; i < carsIn.size(); i++){
+        for (int i = 0; i < carsIn.size(); i++) {
             this.cars[i] = new Tuple<>(carsIn.get(i),PictureLoader.getImage(carsIn.get(i)));
         }
     }
@@ -36,7 +36,7 @@ public class DrawPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for(Tuple<Car, BufferedImage> car : cars) {
+        for (Tuple<Car, BufferedImage> car : cars) {
             int x = (int) Math.round(car.getLeft().nav.getPosition().x);
             int y = (int) Math.round(car.getLeft().nav.getPosition().y);
             g.drawImage(car.getRight(), x, y, null);

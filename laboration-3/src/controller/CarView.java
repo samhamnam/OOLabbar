@@ -1,23 +1,21 @@
 package controller;
 
-import cars.Transporter;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class CarView implements IView<JComponent> {
-    private final JPanel panel = new JPanel(null);
+    private final JPanel panel;
 
-    public CarView(){
-        panel.setPreferredSize(new Dimension(800,400));
-        panel.setBackground(Color.orange);
+    public CarView(int x, int y, int width, int height, Color color, LayoutManager layout) {
+        panel = new JPanel(layout);
+        panel.setBounds(x,y,width,height);
+        panel.setBackground(color);
     }
 
     @Override
     public void addPaintables(ArrayList<JComponent> paintables) {
-        for(JComponent p : paintables){
+        for (JComponent p : paintables) {
             panel.add(p);
         }
         panel.repaint();
@@ -27,10 +25,5 @@ public class CarView implements IView<JComponent> {
     @Override
     public JComponent getPanel() {
         return panel;
-    }
-
-    @Override
-    public void paint() {
-
     }
 }

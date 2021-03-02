@@ -27,7 +27,6 @@ public class Application<Event, Paintable> {
         for(IView<Paintable> view : views) {
             window.add(view.getPanel());
         }
-
     }
 
     public void run() {

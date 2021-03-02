@@ -27,7 +27,10 @@ public class Main {
         cars.add(new Tuple<>(new Scania(), new JLabel(new ImageIcon(PictureLoader.getImage(new Scania())))));
 
         ArrayList<IView<JComponent>> carViews = new ArrayList<>();
+        carViews.add(new CarView(0,0,800,600,Color.gray,null)); // Cars
+        carViews.add(new CarView(0,0,128,128, Color.CYAN,new GridLayout(6,1))); // Speed
         ArrayList<IView<JComponent>> buttonViews = new ArrayList<>();
+        buttonViews.add(new CarView(0,600,800,200, Color.green, new GridLayout(2,6))); // Buttons
 
         ArrayList<IController<CarEvent, JComponent>> carControllers = new ArrayList<>();
         carControllers.add(new CarController());

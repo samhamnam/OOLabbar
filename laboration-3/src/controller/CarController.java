@@ -45,20 +45,24 @@ public class CarController implements IController<CarEvent, JComponent> {
         return paintables;
     }
 
-
     public CarController() {
-        assign();
         appearance();
+        assign();
     }
 
-    private void assign(){
+    private void assign() {
         gasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 events.add(new CarEvent("breaks",Command.GAS));
             }
         });
-
+        gasSpinner.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                double d = (int) ((JSpinner)e.getSource()).getValue();
+                events.add(new CarEvent("the acceleration",Command.GAS_SPEED, d));
+            }
+        });
         brakeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -93,14 +97,9 @@ public class CarController implements IController<CarEvent, JComponent> {
                 events.add(new CarEvent("lift bed",Command.LIFT_BED));
             }
         });
-        gasSpinner.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                events.add(new CarEvent("gas spin",Command.LIFT_BED));
-            }
-        });
     }
 
-    private void appearance(){
+    private void appearance() {
         SpinnerModel spinnerModel =
                 new SpinnerNumberModel(0, //initial value
                         0, //min

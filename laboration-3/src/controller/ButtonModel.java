@@ -16,13 +16,11 @@ public class ButtonModel implements IModel<CarEvent, JComponent> {
         this.controllers = controllers;
         this.views = views;
 
-        ButtonView bv = new ButtonView();
-        //CarController cc = new CarController();
-        for(IController<CarEvent, JComponent> controller : controllers) {
-            bv.addPaintables(controller.getPaintables());
-            System.out.println("YTYO");
+        for (IView<JComponent> v : views) {
+            for (IController<CarEvent, JComponent> c : controllers) {
+                v.addPaintables(c.getPaintables());
+            }
         }
-        views.add(bv);
     }
 
     @Override
@@ -38,10 +36,5 @@ public class ButtonModel implements IModel<CarEvent, JComponent> {
     @Override
     public void update() {
 
-    }
-
-    @Override
-    public ArrayList<JComponent> getPaintables() {
-        return null;
     }
 }

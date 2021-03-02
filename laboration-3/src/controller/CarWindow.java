@@ -9,7 +9,7 @@ public class CarWindow implements IWindow<JComponent> {
     private final JPanel panel = new JPanel();
 
     public CarWindow(String title, int x, int y){
-        panel.setLayout(new GridLayout(2,1));
+        panel.setLayout(null);
 
         window.setPreferredSize(new Dimension(x,y));
         panel.setPreferredSize(new Dimension(x,y));

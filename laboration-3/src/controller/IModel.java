@@ -7,5 +7,4 @@ public interface IModel<Event, Paintable> {
     ArrayList<IController<Event, Paintable>> getControllers();
     ArrayList<IView<Paintable>> getViews();
     void update();
-    ArrayList<Paintable> getPaintables();
 }
