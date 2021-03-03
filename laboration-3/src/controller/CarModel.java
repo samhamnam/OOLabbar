@@ -5,27 +5,33 @@ import cars.Saab95;
 import cars.Transporter;
 import cars.Truck;
 import controller.CarEvent.Command;
+import util.Threple;
 import util.Tuple;
 
 import javax.swing.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CarModel implements IModel<CarEvent, JComponent> {
-    private final ArrayList<Tuple<Transporter, JLabel>> cars;
+    private final ArrayList<Threple<Transporter, JLabel, JLabel>> cars;
     private final ArrayList<IController<CarEvent, JComponent>> controllers;
-    private final ArrayList<IView<JComponent>> views;
     private EventMatching<Command> EM;
 
     private double speed = 0;
 
-    public CarModel(ArrayList<IController<CarEvent, JComponent>> controllers, ArrayList<IView<JComponent>> views, ArrayList<Tuple<Transporter, JLabel>> cars) {
+    private final IView<JComponent> carView;
+    private final IView<JComponent> speedLabelView;
+
+    public CarModel(ArrayList<IController<CarEvent, JComponent>> controllers, IView<JComponent> carView, IView<JComponent> speedLabelView, ArrayList<Threple<Transporter,JLabel, JLabel>> cars) {
+        this.carView = (carView);
+        this.speedLabelView = (speedLabelView);
+
         this.controllers = controllers;
-        this.views = views;
         this.cars = cars;
 
-        views.get(0).addPaintables(getCarPictures());
-
+        speedLabelView.addPaintables(getCarLabels());
+        carView.addPaintables(getCarPictures());
 
         assign();
     }
@@ -68,6 +74,9 @@ public class CarModel implements IModel<CarEvent, JComponent> {
 
     @Override
     public ArrayList<IView<JComponent>> getViews() {
+        ArrayList<IView<JComponent>> views = new ArrayList<>();
+        views.add(speedLabelView);
+        views.add(carView);
         return views;
     }
 
@@ -81,9 +90,10 @@ public class CarModel implements IModel<CarEvent, JComponent> {
             EM.getFunc(event.getCommand()).apply(event.getAmount());
         }
 
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             Transporter car = t.getLeft();
             JLabel pic = t.getRight();
+            JLabel speedLabel = t.getMiddle();
             car.move();
 
             int x = (int) Math.round(car.nav.getPosition().getX());
@@ -95,6 +105,8 @@ public class CarModel implements IModel<CarEvent, JComponent> {
                 car.turnLeft();
             }
 
+            speedLabel.setText(car.getClass().getSimpleName() + ": " + car.getCurrentSpeed());
+
             pic.setBounds(
                 x,
                 y,
@@ -103,9 +115,17 @@ public class CarModel implements IModel<CarEvent, JComponent> {
         }
     }
 
+    public ArrayList<JComponent> getCarLabels(){
+        ArrayList<JComponent> labels = new ArrayList<>();
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
+            labels.add(t.getMiddle());
+        }
+        return labels;
+    }
+
     public ArrayList<JComponent> getCarPictures() {
         ArrayList<JComponent> carPictures = new ArrayList<>();
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             carPictures.add(t.getRight());
         }
         return carPictures;
@@ -114,7 +134,7 @@ public class CarModel implements IModel<CarEvent, JComponent> {
 
     void gas(double amount) {
         double gas = ((double) speed) / 100;
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             Transporter car = t.getLeft();
             car.gas(gas);
         }
@@ -122,7 +142,7 @@ public class CarModel implements IModel<CarEvent, JComponent> {
 
     void brake(double amount) {
         double gas = ((double) amount) / 100;
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             Transporter car = t.getLeft();
             car.brake(gas);
         }
@@ -130,7 +150,7 @@ public class CarModel implements IModel<CarEvent, JComponent> {
 
 
     void turboOn(double amount) {
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             Transporter car = t.getLeft();
             if (car instanceof Saab95) {
                 ((Saab95) car).setTurboOn();
@@ -139,7 +159,7 @@ public class CarModel implements IModel<CarEvent, JComponent> {
     }
 
     void turboOff(double amount) {
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             Transporter car = t.getLeft();
             if (car instanceof Saab95) {
                 ((Saab95) car).setTurboOff();
@@ -148,7 +168,7 @@ public class CarModel implements IModel<CarEvent, JComponent> {
     }
 
     void pickupUp(double amount) {
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             Transporter car = t.getLeft();
             if (car instanceof Truck) {
                 ((Truck) car).raisePickup();
@@ -157,7 +177,7 @@ public class CarModel implements IModel<CarEvent, JComponent> {
     }
 
     void pickupDown(double amount) {
-        for (Tuple<Transporter, JLabel> t : cars) {
+        for (Threple<Transporter,JLabel, JLabel> t : cars) {
             Transporter car = t.getLeft();
             if (car instanceof Truck) {
                 ((Truck) car).lowerPickup();

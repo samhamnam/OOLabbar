@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EventMatching<key> {
-    private HashMap<key, func> dicc;
+    private HashMap<key, func> dicc; // ;)
 
     public EventMatching(HashMap<key,func> hm){
         dicc = hm;
