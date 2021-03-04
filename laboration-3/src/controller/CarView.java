@@ -1,29 +1,46 @@
 package controller;
 
+import cars.Car;
+import controller.interfaces.IView;
+import util.Tuple;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class CarView implements IView<JComponent> {
-    private final JPanel panel;
+    ArrayList<Tuple<BufferedImage, Point2D>> cars;
 
-    public CarView(int x, int y, int width, int height, Color color, LayoutManager layout) {
-        panel = new JPanel(layout);
-        panel.setBounds(x,y,width,height);
-        panel.setBackground(color);
-    }
-
-    @Override
-    public void addPaintables(ArrayList<JComponent> paintables) {
-        for (JComponent p : paintables) {
-            panel.add(p);
+    private final JPanel view = new JPanel(null) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if(cars != null){
+                for (Tuple<BufferedImage, Point2D> car : cars) {
+                    int x = (int) Math.round(car.getRight().getX());
+                    int y = (int) Math.round(car.getRight().getY());
+                    g.drawImage(car.getLeft(), x, y, null);
+                }
+            }
         }
-        panel.repaint();
-        panel.revalidate();
+    };
+    private CarModel model;
+
+    public CarView (CarModel model){
+        view.setBounds(0,0,800,500);
+        view.setBackground(Color.orange);
+        this.model = model;
     }
 
     @Override
     public JComponent getPanel() {
-        return panel;
+        return view;
+    }
+
+    @Override
+    public void update() {
+        cars = model.getCarPositionsAndImage();
     }
 }

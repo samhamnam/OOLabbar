@@ -1,30 +1,27 @@
 package controller;
 
+import controller.interfaces.Controller;
+import controller.interfaces.IModel;
+import controller.interfaces.IView;
+import controller.interfaces.IWindow;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.PathIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 import java.util.HashSet;
 
-public class Application<Event, Paintable> {
-    private final ArrayList<IModel<Event, Paintable>> models;
+public class MainModel<Paintable> {
+    private final HashSet<IModel> models;
     private final IWindow<Paintable> window;
     private final HashSet<IView<Paintable>> views;
 
     private final Timer timer = new Timer(100, new TimerListener());
 
-    public Application(ArrayList<IModel<Event, Paintable>> models, IWindow<Paintable> window) {
+    public MainModel(HashSet<IModel> models, HashSet<IView<Paintable>> views, IWindow<Paintable> window) {
         this.models = models;
         this.window = window;
-        views = new HashSet<>();
-        for(IModel<Event, Paintable> model : models) {
-            views.addAll(model.getViews());
-        }
-        for(IView<Paintable> view : views) {
+        this.views = views;
+        for(IView<Paintable> view : views){
             window.add(view.getPanel());
         }
     }
@@ -34,8 +31,11 @@ public class Application<Event, Paintable> {
     }
 
     private void update() {
-        for(IModel<Event,Paintable> model : models) {
+        for(IModel model : models) {
              model.update();
+        }
+        for(IView<Paintable> view : views){
+            view.update();
         }
         window.repaint();
     }

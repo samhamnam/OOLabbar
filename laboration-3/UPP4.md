@@ -37,4 +37,4 @@ Composite:
   Våra Views är likt composite då de representerar flera komponenter som sätts in i en JPanel.
   Och varje JPanel kan innehålla JComponents. På så sätt kan vi gömma 
 * Finns det något ställe där ni kan förbättra er design genom att använda detta design pattern?\
-
+  Inte vad vi kan komma på.

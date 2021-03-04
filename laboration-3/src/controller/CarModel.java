@@ -1,37 +1,41 @@
 package controller;
 
-import cars.Car;
-import cars.Saab95;
-import cars.Transporter;
-import cars.Truck;
+import cars.*;
 import controller.CarEvent.Command;
-import util.Threple;
+import controller.interfaces.*;
+import util.PictureLoader;
 import util.Tuple;
 
-import javax.swing.*;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class CarModel implements IModel<CarEvent, JComponent> {
-    private final ArrayList<Threple<Transporter, JLabel, JLabel>> cars;
-    private final ArrayList<IController<CarEvent, JComponent>> controllers;
+public class CarModel implements IModel,IEventListener<CarEvent> {
+    private final ArrayList<Transporter> cars;
     private EventMatching<Command> EM;
+
+    public Tuple<Double,String> getFirstSpeedAndClass() {
+        return new Tuple<>(cars.get(0).getCurrentSpeed(), cars.get(0).getClass().getSimpleName());
+    }
+
+    // TODO outside of area of expertise
+    public ArrayList<Tuple<BufferedImage,Point2D>> getCarPositionsAndImage(){
+        ArrayList<Tuple<BufferedImage,Point2D>> poss = new ArrayList<>();
+        for(Transporter car : cars){
+            poss.add(new Tuple<>(PictureLoader.getImage(car),car.nav.getPosition()));
+        }
+        return poss;
+    }
 
     private double speed = 0;
 
-    private final IView<JComponent> carView;
-    private final IView<JComponent> speedLabelView;
-
-    public CarModel(ArrayList<IController<CarEvent, JComponent>> controllers, IView<JComponent> carView, IView<JComponent> speedLabelView, ArrayList<Threple<Transporter,JLabel, JLabel>> cars) {
-        this.carView = (carView);
-        this.speedLabelView = (speedLabelView);
-
-        this.controllers = controllers;
+    public CarModel( ArrayList<Transporter> cars) {
         this.cars = cars;
-
-        speedLabelView.addPaintables(getCarLabels());
-        carView.addPaintables(getCarPictures());
+        int y = 0;
+        for(Transporter car: cars){
+            car.nav.setPosition(new Point2D.Double(0,y));
+            y+= 100;
+        }
 
         assign();
     }
@@ -66,34 +70,23 @@ public class CarModel implements IModel<CarEvent, JComponent> {
                 Command.GAS_SPEED,
                 this::setSpeed
         );
-    }
-
-    public ArrayList<IController<CarEvent, JComponent>> getControllers() {
-        return controllers;
+        EM.assign(
+                Command.NEW_CAR,
+                this::addCar
+        );
+        EM.assign(
+                Command.REMOVE_CAR,
+                this::removeCar
+        );
     }
 
     @Override
-    public ArrayList<IView<JComponent>> getViews() {
-        ArrayList<IView<JComponent>> views = new ArrayList<>();
-        views.add(speedLabelView);
-        views.add(carView);
-        return views;
+    public void newEvent(CarEvent e) {
+        EM.getFunc(e.getCommand()).apply(e.getAmount());
     }
 
     public void update() {
-        ArrayList<CarEvent> events = new ArrayList<>();
-        for(IController<CarEvent,JComponent> controller: controllers) {
-            events.addAll(controller.getEvents());
-            controller.clearEvents();
-        }
-        for (CarEvent event : events) {
-            EM.getFunc(event.getCommand()).apply(event.getAmount());
-        }
-
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            Transporter car = t.getLeft();
-            JLabel pic = t.getRight();
-            JLabel speedLabel = t.getMiddle();
+        for (Transporter car: cars) {
             car.move();
 
             int x = (int) Math.round(car.nav.getPosition().getX());
@@ -104,88 +97,65 @@ public class CarModel implements IModel<CarEvent, JComponent> {
                 car.turnLeft();
                 car.turnLeft();
             }
-
-            speedLabel.setText(car.getClass().getSimpleName() + ": " + car.getCurrentSpeed());
-
-            pic.setBounds(
-                x,
-                y,
-                100, 60
-            );
         }
     }
 
-    public ArrayList<JComponent> getCarLabels(){
-        ArrayList<JComponent> labels = new ArrayList<>();
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            labels.add(t.getMiddle());
-        }
-        return labels;
-    }
-
-    public ArrayList<JComponent> getCarPictures() {
-        ArrayList<JComponent> carPictures = new ArrayList<>();
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            carPictures.add(t.getRight());
-        }
-        return carPictures;
-    }
-
-
-    void gas(double amount) {
+    private void gas(double amount) {
         double gas = ((double) speed) / 100;
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            Transporter car = t.getLeft();
+        for (Transporter car : cars) {
             car.gas(gas);
         }
     }
 
-    void brake(double amount) {
+    private void brake(double amount) {
         double gas = ((double) amount) / 100;
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            Transporter car = t.getLeft();
+        for (Transporter car : cars) {
             car.brake(gas);
         }
     }
 
-
-    void turboOn(double amount) {
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            Transporter car = t.getLeft();
+    private void turboOn(double amount) {
+        for (Transporter car : cars) {
             if (car instanceof Saab95) {
                 ((Saab95) car).setTurboOn();
             }
         }
     }
 
-    void turboOff(double amount) {
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            Transporter car = t.getLeft();
+    private void turboOff(double amount) {
+        for (Transporter car : cars) {
             if (car instanceof Saab95) {
                 ((Saab95) car).setTurboOff();
             }
         }
     }
 
-    void pickupUp(double amount) {
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            Transporter car = t.getLeft();
+    private void pickupUp(double amount) {
+        for (Transporter car : cars) {
             if (car instanceof Truck) {
                 ((Truck) car).raisePickup();
             }
         }
     }
 
-    void pickupDown(double amount) {
-        for (Threple<Transporter,JLabel, JLabel> t : cars) {
-            Transporter car = t.getLeft();
+    private void pickupDown(double amount) {
+        for (Transporter car : cars) {
             if (car instanceof Truck) {
                 ((Truck) car).lowerPickup();
             }
         }
     }
-    void setSpeed(double amount) {
+    private void setSpeed(double amount) {
         speed = amount;
         System.out.println(amount);
+    }
+
+    private void addCar(double amount){
+        if(cars.size() < 10)
+            cars.add(new Volvo240());
+    }
+    private void removeCar(double amount){
+        if(cars.size() > 0)
+            cars.remove(cars.size() - 1);
     }
 }

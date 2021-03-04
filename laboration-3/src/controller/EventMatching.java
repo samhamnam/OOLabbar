@@ -22,7 +22,7 @@ public class EventMatching<key> {
     public void assign(key key, func f){
         dicc.replace(key,f);
     }
-    public void asignAll(Tuple<key,func>[] ts){
+    public void assignAll(Tuple<key,func>[] ts){
         for(Tuple<key, func> t :ts){
             assign(t.getLeft(),t.getRight());
         }

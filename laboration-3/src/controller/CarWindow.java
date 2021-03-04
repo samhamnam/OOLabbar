@@ -1,8 +1,8 @@
 package controller;
+import controller.interfaces.IWindow;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class CarWindow implements IWindow<JComponent> {
     private final JFrame window = new JFrame();

@@ -1,19 +1,15 @@
 package controller;
 
 import cars.*;
-import com.sun.jdi.ArrayReference;
-import util.PictureLoader;
-import util.Threple;
-import util.Tuple;
+import controller.interfaces.Controller;
+import controller.interfaces.IEventListener;
+import controller.interfaces.IModel;
+import controller.interfaces.IView;
 
-import javax.management.remote.JMXConnectorServerFactory;
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Main {
 
@@ -22,27 +18,36 @@ public class Main {
     }
 
     public void program(){
-        ArrayList<Threple<Transporter,JLabel,JLabel>> cars = new ArrayList<>();
-        cars.add(new Threple<>(new Volvo240(),new JLabel(""), new JLabel(new ImageIcon(PictureLoader.getImage(new Volvo240())))));
-        cars.add(new Threple<>(new Saab95(),new JLabel(""), new JLabel(new ImageIcon(PictureLoader.getImage(new Saab95())))));
-        cars.add(new Threple<>(new Scania(),new JLabel(""), new JLabel(new ImageIcon(PictureLoader.getImage(new Scania())))));
+        ArrayList<Transporter> cars = new ArrayList<>();
+        cars.add(new Volvo240());
+        cars.add(new Saab95());
+        cars.add(new Scania());
 
+        CarModel model = new CarModel(cars);
 
-        IView<JComponent> speedView = new CarView(0,600-128,128,128, Color.CYAN,new GridLayout(6,1)); // Speed
-        IView<JComponent> carView =new CarView(0,0,800,600,Color.gray,null); // Cars
-        ArrayList<IView<JComponent>> buttonViews = new ArrayList<>();
-        buttonViews.add(new CarView(0,600,800,200, Color.green, new GridLayout(2,6))); // Buttons
+        HashSet<IModel> models = new HashSet<>();
+        models.add(model);
+        HashSet<IEventListener<CarEvent>> listeners = new HashSet<>();
+        listeners.add(model);
 
-        ArrayList<IController<CarEvent, JComponent>> carControllers = new ArrayList<>();
-        carControllers.add(new CarController());
-        ArrayList<IModel<CarEvent, JComponent>> models = new ArrayList<>();
-        models.add(new CarModel(carControllers, carView,speedView, cars));
-        models.add(new ButtonModel(carControllers,  buttonViews));
+        ButtonView buttonView = new ButtonView(0,500,800,300, Color.red, new GridLayout(2,2));
 
-        Application<CarEvent, JComponent> app = new Application<>(
+        CarController carController = new CarController(buttonView,listeners);
+
+        HashSet<Controller<CarEvent>> controllers = new HashSet<>();
+        controllers.add(carController);
+
+        HashSet<IView<JComponent>> views = new HashSet<>();
+        views.add(new CarSpeedView(model));
+        views.add(buttonView);
+        views.add(new CarView(model));
+
+        MainModel<JComponent> app = new MainModel<>(
                 models,
+                views,
                 new CarWindow("Car-Sim", 800, 800)
         );
+        //MainMethodFactory.createMainModel().run();
         app.run();
     }
 }

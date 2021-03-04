@@ -6,3 +6,6 @@ för tjock.
 Till sist så har vi DrawPanel som faktiskt är en bra view eftersom den är small och ritar enbart upp.
 Det ända negativa är att den själv får matcha bilarna em dess bilder vilket borde istället gjorts
 i modellen, vilket gör DrawPanel lite för smart. 
+
+I våran nya design berodde modellen både på views och controllers vilket den ej skulle göra.
+Vi refaktoriserade hela projektet för att se till att modellen blev så självständig som möjligt.

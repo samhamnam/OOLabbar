@@ -1,9 +1,9 @@
-package controller;
+package controller.interfaces;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public interface IView<Paintable> {
-    void addPaintables(ArrayList<Paintable> paintables);
     Paintable getPanel();
+    void update();
 }
