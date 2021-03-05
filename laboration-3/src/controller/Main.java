@@ -33,9 +33,9 @@ public class Main {
 
         ButtonView buttonView = new ButtonView(0,500,800,300, Color.red, new GridLayout(2,2));
 
-        CarController carController = new CarController(buttonView,listeners);
+        CarController carController = new CarController(buttonView,model);
 
-        HashSet<Controller<CarEvent>> controllers = new HashSet<>();
+        HashSet<Controller> controllers = new HashSet<>();
         controllers.add(carController);
 
         HashSet<IView<JComponent>> views = new HashSet<>();

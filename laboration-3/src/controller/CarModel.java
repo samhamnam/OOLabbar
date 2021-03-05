@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class CarModel{
     private final ArrayList<Transporter> cars;
-    private EventMatching<Command, Func> EM;
 
 
     private double speed;
@@ -27,8 +26,6 @@ public class CarModel{
             y += 100;
         }
         this.speed = speed;
-
-        assign();
     }
 
     public Tuple<Double,String> getFirstSpeedAndClass() {
@@ -44,54 +41,13 @@ public class CarModel{
         return poss;
     }
 
-    private void assign() {
-        this.EM = new EventMatching<>(Command.values());
-        EM.assign(
-                Command.GAS,
-                this::gas
-        );
-        EM.assign(
-                Command.BRAKE,
-                this::gas
-        );
-        EM.assign(
-                Command.LIFT_BED,
-                this::pickupUp
-        );
-        EM.assign(
-                Command.LOWER_BED,
-                this::pickupDown
-        );
-        EM.assign(
-                Command.TURBO_OFF,
-                this::turboOff
-        );
-        EM.assign(
-                Command.TURBO_ON,
-                this::turboOn
-        );
-        EM.assign(
-                Command.GAS_SPEED,
-                this::setSpeed
-        );
-        EM.assign(
-                Command.NEW_CAR,
-                this::addCar
-        );
-        EM.assign(
-                Command.REMOVE_CAR,
-                this::removeCar
-        );
-    }
+
 
 
 
     public CarModel update(ArrayList<CarEvent> events) {
         //TODO For this to work the cars would also need to be made immutable. But this works as proof of concept.
         CarModel newModel = new CarModel(cars,speed);
-        for(CarEvent e : events){
-            newModel.EM.getFunc(e.getCommand()).apply(e.getAmount());
-        }
 
         for (Transporter car: cars) {
             car.move();
@@ -109,21 +65,21 @@ public class CarModel{
         return newModel;
     }
 
-    private void gas(double amount) {
+    public void gas(double amount) {
         double gas = ((double) speed) / 100;
         for (Transporter car : cars) {
             car.gas(gas);
         }
     }
 
-    private void brake(double amount) {
+    public void brake(double amount) {
         double gas = ((double) amount) / 100;
         for (Transporter car : cars) {
             car.brake(gas);
         }
     }
 
-    private void turboOn(double amount) {
+    public void turboOn(double amount) {
         for (Transporter car : cars) {
             if (car instanceof Saab95) {
                 ((Saab95) car).setTurboOn();
@@ -131,7 +87,7 @@ public class CarModel{
         }
     }
 
-    private void turboOff(double amount) {
+    public void turboOff(double amount) {
         for (Transporter car : cars) {
             if (car instanceof Saab95) {
                 ((Saab95) car).setTurboOff();
@@ -139,7 +95,7 @@ public class CarModel{
         }
     }
 
-    private void pickupUp(double amount) {
+    public void pickupUp(double amount) {
         for (Transporter car : cars) {
             if (car instanceof Truck) {
                 ((Truck) car).raisePickup();
@@ -147,7 +103,7 @@ public class CarModel{
         }
     }
 
-    private void pickupDown(double amount) {
+    public void pickupDown(double amount) {
         for (Transporter car : cars) {
             if (car instanceof Truck) {
                 ((Truck) car).lowerPickup();
@@ -155,22 +111,22 @@ public class CarModel{
         }
     }
 
-    private void setSpeed(double amount) {
+    public void setSpeed(double amount) {
         speed = amount;
     }
 
-    private void addCar(double amount){
+    public void addCar(double amount){
         if(cars.size() < 10)
             cars.add(new Volvo240());
     }
 
-    private void removeCar(double amount){
+    public void removeCar(double amount){
         if(cars.size() > 0)
             cars.remove(cars.size() - 1);
     }
 
-    void hej(double a){
-        turboOn(a);
-        gas(a);
-    }
+//    void hej(double a){
+//        turboOn(a);
+//        gas(a);
+//    }
 }

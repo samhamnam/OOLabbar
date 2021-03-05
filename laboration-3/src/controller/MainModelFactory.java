@@ -10,7 +10,7 @@ public class MainModelFactory {
 
     public static <Event, Paintable> MainModel createMainModel(ArrayList<Transporter> cars,
                                                                HashSet<IModel> models,
-                                                               HashSet<Controller<Event>> controllers,
+                                                               HashSet<Controller> controllers,
                                                                HashSet<IView<Paintable>> views,
                                                                IWindow<Paintable> window
         ){

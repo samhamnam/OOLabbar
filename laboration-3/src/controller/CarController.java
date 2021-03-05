@@ -12,72 +12,113 @@ import controller.CarEvent.Command;
 import controller.abracts.Controller;
 import controller.abracts.IEventListener;
 
-public class CarController extends Controller<CarEvent> {
-    public CarController(ButtonView buttonView, HashSet<IEventListener<CarEvent>> observers) {
-        super(observers);
+public class CarController extends Controller {
+    CarModelWrapper model;
+    public CarController(ButtonView buttonView, CarModelWrapper model) {
         assign(buttonView);
+        this.model = model;
+        assign2();
     }
-
+    private EventMatching<Command, CarModel.Func> EM;
+    private void assign2() {
+        this.EM = new EventMatching<>(Command.values());
+        EM.assign(
+                Command.GAS,
+                model::gas
+        );
+        EM.assign(
+                Command.BRAKE,
+                model::gas
+        );
+        EM.assign(
+                Command.LIFT_BED,
+                model::pickupUp
+        );
+        EM.assign(
+                Command.LOWER_BED,
+                model::pickupDown
+        );
+        EM.assign(
+                Command.TURBO_OFF,
+                model::turboOff
+        );
+        EM.assign(
+                Command.TURBO_ON,
+                model::turboOn
+        );
+        EM.assign(
+                Command.GAS_SPEED,
+                model::setSpeed
+        );
+        EM.assign(
+                Command.NEW_CAR,
+                model::addCar
+        );
+        EM.assign(
+                Command.REMOVE_CAR,
+                model::removeCar
+        );
+    }
     private void assign(ButtonView buttonView) {
+
         buttonView.setGasButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("breaks",Command.GAS));
+                EM.getFunc(Command.GAS).apply(0);
             }
         });
         buttonView.setSpinnerAction(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 double d = (int) ((JSpinner) e.getSource()).getValue();
-                System.out.println(d);
-                notifyObservers(new CarEvent("the acceleration", Command.GAS_SPEED, d));
+                EM.getFunc(Command.GAS_SPEED).apply(d);
             }
         });
         buttonView.setBrakeButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("breaks",Command.BRAKE));
+                EM.getFunc(Command.BRAKE).apply(1);
             }
         });
 
         buttonView.setTurbonOnButtonAction(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("turbo on",Command.TURBO_ON));
+                EM.getFunc(Command.TURBO_ON).apply(0);
             }
         });
 
         buttonView.setTurboOffButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("turbo off",Command.TURBO_OFF));
+                EM.getFunc(Command.TURBO_OFF).apply(0);
             }
         });
 
         buttonView.setLowerBedButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("lower bed",Command.LOWER_BED));
+                EM.getFunc(Command.LOWER_BED).apply(0);
             }
         });
 
         buttonView.setLifeBedButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("lift bed",Command.LIFT_BED));
+                EM.getFunc(Command.LIFT_BED).apply(0);
             }
         });
 
         buttonView.setAddCarButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("add car",Command.NEW_CAR));
+                EM.getFunc(Command.NEW_CAR).apply(0);
             }
         });
 
         buttonView.setRemoveCarButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyObservers(new CarEvent("remove car",Command.REMOVE_CAR));
+                EM.getFunc(Command.REMOVE_CAR).apply(0);
             }
         });
     }
