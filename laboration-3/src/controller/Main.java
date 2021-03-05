@@ -1,10 +1,10 @@
 package controller;
 
 import cars.*;
-import controller.interfaces.Controller;
-import controller.interfaces.IEventListener;
-import controller.interfaces.IModel;
-import controller.interfaces.IView;
+import controller.abracts.Controller;
+import controller.abracts.IEventListener;
+import controller.abracts.IModel;
+import controller.abracts.IView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,8 @@ public class Main {
         cars.add(new Saab95());
         cars.add(new Scania());
 
-        CarModel model = new CarModel(cars);
+
+        CarModelWrapper model = new CarModelWrapper(new CarModel(cars,0));
 
         HashSet<IModel> models = new HashSet<>();
         models.add(model);
@@ -42,10 +43,16 @@ public class Main {
         views.add(buttonView);
         views.add(new CarView(model));
 
+        CarWindow window = new CarWindow("Car-Sim", 800, 800);
+
+        for (IView<JComponent> view : views) {
+            window.add(view.getPanel());
+        }
+
         MainModel<JComponent> app = new MainModel<>(
                 models,
                 views,
-                new CarWindow("Car-Sim", 800, 800)
+                window
         );
         //MainMethodFactory.createMainModel().run();
         app.run();

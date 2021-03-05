@@ -1,20 +1,18 @@
 package controller;
 
-import cars.Transporter;
-import com.sun.jdi.connect.Transport;
-import controller.interfaces.IView;
+import controller.abracts.IView;
 import util.Tuple;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CarSpeedView implements IView<JComponent> {
-    final private CarModel model;
+    final private CarModelWrapper model;
     private JPanel panel = new JPanel(new GridLayout());
     private JLabel label = new JLabel();
 
 
-    public CarSpeedView (CarModel model){
+    public CarSpeedView (CarModelWrapper model){
         this.model = model;
         panel.setBounds(0,400,300,100);
         panel.add(label);

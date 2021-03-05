@@ -3,32 +3,22 @@ package controller;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import controller.CarEvent.Command;
-import controller.interfaces.Controller;
-import controller.interfaces.IEventListener;
+import controller.abracts.Controller;
+import controller.abracts.IEventListener;
 
 public class CarController extends Controller<CarEvent> {
-    private ButtonView buttonView;
-
-    public CarController(ButtonView buttonView,HashSet<IEventListener<CarEvent>> observers) {
+    public CarController(ButtonView buttonView, HashSet<IEventListener<CarEvent>> observers) {
         super(observers);
-        this.buttonView = buttonView;
-        assign();
+        assign(buttonView);
     }
 
-    public ArrayList<JComponent> getPaintables() {
-        ArrayList<JComponent> paintables = new ArrayList<>();
-        paintables.add(buttonView.getPanel());
-        return paintables;
-    }
-
-    private void assign() {
+    private void assign(ButtonView buttonView) {
         buttonView.setGasButtonAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -38,6 +28,7 @@ public class CarController extends Controller<CarEvent> {
         buttonView.setSpinnerAction(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 double d = (int) ((JSpinner) e.getSource()).getValue();
+                System.out.println(d);
                 notifyObservers(new CarEvent("the acceleration", Command.GAS_SPEED, d));
             }
         });

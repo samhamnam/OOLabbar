@@ -1,12 +1,11 @@
 package controller;
 
-import controller.interfaces.IView;
+import controller.abracts.IView;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class ButtonView implements IView<JComponent> {
     private final JPanel panel;
@@ -32,31 +31,15 @@ public class ButtonView implements IView<JComponent> {
         removeCarButton.addActionListener(al);
     }
 
-    public void setGasButtonAction(ActionListener al){
-        gasButton.addActionListener(al);
-    }
-    public void setBrakeButtonAction(ActionListener al){
-        brakeButton.addActionListener(al);
-    }
-    public void setTurbonOnButtonAction(ActionListener al){
-        turboOnButton.addActionListener(al);
-    }
-    public void setTurboOffButtonAction(ActionListener al){
-        turboOffButton.addActionListener(al);
-    }
-    public void setLifeBedButtonAction(ActionListener al){
-        liftBedButton.addActionListener(al);
-    }
-    public void setLowerBedButtonAction(ActionListener al){
-        lowerBedButton.addActionListener(al);
-    }
-    public void setStartButtonAction(ActionListener al){
-        startButton.addActionListener(al);
-    }
-    public void setStopButtonAction(ActionListener al){
-        stopButton.addActionListener(al);
-    }
-    public void setSpinnerAction(ChangeListener cl){gasSpinner.addChangeListener(cl);}
+    public void setGasButtonAction(ActionListener al) { gasButton.addActionListener(al); }
+    public void setBrakeButtonAction(ActionListener al) { brakeButton.addActionListener(al); }
+    public void setTurbonOnButtonAction(ActionListener al) { turboOnButton.addActionListener(al); }
+    public void setTurboOffButtonAction(ActionListener al) { turboOffButton.addActionListener(al); }
+    public void setLifeBedButtonAction(ActionListener al) { liftBedButton.addActionListener(al); }
+    public void setLowerBedButtonAction(ActionListener al) { lowerBedButton.addActionListener(al); }
+    public void setStartButtonAction(ActionListener al) { startButton.addActionListener(al); }
+    public void setStopButtonAction(ActionListener al) { stopButton.addActionListener(al); }
+    public void setSpinnerAction(ChangeListener cl) { gasSpinner.addChangeListener(cl); }
 
     public ButtonView(int x, int y, int width, int height, Color color, LayoutManager layout) {
         panel = new JPanel(layout);

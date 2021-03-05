@@ -74,17 +74,17 @@ public abstract class Transporter implements Movable {
 
     /**
      * Clamps a value between two points.
-     * @param x: value to be clamped.
+     * @param val: value to be clamped.
      * @param min: minimum clamp value.
      * @param max: maximum clamp value.
      * @return double
      */
-    public static double clamp(double x, double min, double max) {
-        if (x > max)
-            x = max;
-        else if (x < min)
-            x = min;
-        return x;
+    public static double clamp(double val, double min, double max) {
+        if (val > max)
+            val = max;
+        else if (val < min)
+            val = min;
+        return val;
     }
 
     /**

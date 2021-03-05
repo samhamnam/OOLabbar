@@ -1,9 +1,8 @@
 package controller;
 
-import controller.interfaces.Controller;
-import controller.interfaces.IModel;
-import controller.interfaces.IView;
-import controller.interfaces.IWindow;
+import controller.abracts.IModel;
+import controller.abracts.IView;
+import controller.abracts.IWindow;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,15 +14,12 @@ public class MainModel<Paintable> {
     private final IWindow<Paintable> window;
     private final HashSet<IView<Paintable>> views;
 
-    private final Timer timer = new Timer(100, new TimerListener());
+    private final Timer timer = new Timer(30, new TimerListener());
 
     public MainModel(HashSet<IModel> models, HashSet<IView<Paintable>> views, IWindow<Paintable> window) {
         this.models = models;
         this.window = window;
         this.views = views;
-        for(IView<Paintable> view : views){
-            window.add(view.getPanel());
-        }
     }
 
     public void run() {
@@ -31,10 +27,10 @@ public class MainModel<Paintable> {
     }
 
     private void update() {
-        for(IModel model : models) {
-             model.update();
+        for (IModel model : models) {
+            model.update();
         }
-        for(IView<Paintable> view : views){
+        for (IView<Paintable> view : views) {
             view.update();
         }
         window.repaint();

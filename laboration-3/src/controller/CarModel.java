@@ -2,42 +2,46 @@ package controller;
 
 import cars.*;
 import controller.CarEvent.Command;
-import controller.interfaces.*;
-import util.PictureLoader;
+import controller.abracts.*;
 import util.Tuple;
 
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class CarModel implements IModel,IEventListener<CarEvent> {
+public class CarModel{
     private final ArrayList<Transporter> cars;
-    private EventMatching<Command> EM;
+    private EventMatching<Command, Func> EM;
 
-    public Tuple<Double,String> getFirstSpeedAndClass() {
-        return new Tuple<>(cars.get(0).getCurrentSpeed(), cars.get(0).getClass().getSimpleName());
+
+    private double speed;
+
+    interface Func {
+        void apply(double d);
     }
 
-    // TODO outside of area of expertise
-    public ArrayList<Tuple<BufferedImage,Point2D>> getCarPositionsAndImage(){
-        ArrayList<Tuple<BufferedImage,Point2D>> poss = new ArrayList<>();
-        for(Transporter car : cars){
-            poss.add(new Tuple<>(PictureLoader.getImage(car),car.nav.getPosition()));
-        }
-        return poss;
-    }
-
-    private double speed = 0;
-
-    public CarModel( ArrayList<Transporter> cars) {
+    public CarModel(ArrayList<Transporter> cars, double speed) {
         this.cars = cars;
         int y = 0;
-        for(Transporter car: cars){
-            car.nav.setPosition(new Point2D.Double(0,y));
-            y+= 100;
+        for (Transporter car: cars) {
+            car.nav.setPosition(new Point2D.Double(car.nav.getPosition().getX(),y));
+            y += 100;
         }
+        this.speed = speed;
 
         assign();
+    }
+
+    public Tuple<Double,String> getFirstSpeedAndClass() {
+        if(cars.size() == 0) return new Tuple<>(0.0, "I am speed.");
+        return new Tuple<>( cars.get(0).getCurrentSpeed(), cars.get(0).getClass().getSimpleName());
+    }
+
+    public ArrayList<Tuple<String,Point2D>> getCarPositionsAndName() {
+        ArrayList<Tuple<String,Point2D>> poss = new ArrayList<>();
+        for (Transporter car : cars) {
+            poss.add(new Tuple<>(car.getClass().getSimpleName(),(Point2D.Double) car.nav.getPosition().clone()));
+        }
+        return poss;
     }
 
     private void assign() {
@@ -48,7 +52,7 @@ public class CarModel implements IModel,IEventListener<CarEvent> {
         );
         EM.assign(
                 Command.BRAKE,
-                this::brake
+                this::gas
         );
         EM.assign(
                 Command.LIFT_BED,
@@ -80,24 +84,29 @@ public class CarModel implements IModel,IEventListener<CarEvent> {
         );
     }
 
-    @Override
-    public void newEvent(CarEvent e) {
-        EM.getFunc(e.getCommand()).apply(e.getAmount());
-    }
 
-    public void update() {
+
+    public CarModel update(ArrayList<CarEvent> events) {
+        //TODO For this to work the cars would also need to be made immutable. But this works as proof of concept.
+        CarModel newModel = new CarModel(cars,speed);
+        for(CarEvent e : events){
+            newModel.EM.getFunc(e.getCommand()).apply(e.getAmount());
+        }
+
         for (Transporter car: cars) {
             car.move();
 
             int x = (int) Math.round(car.nav.getPosition().getX());
             int y = (int) Math.round(car.nav.getPosition().getY());
 
-            if (x < 0 || x > 690 || y < 0 || y > 700) {
+            if (x < 0 || x > 690) {
                 car.nav.setPosition(new Point2D.Double(Car.clamp(x,0,690),Car.clamp(y,0,700)));
                 car.turnLeft();
                 car.turnLeft();
             }
         }
+
+        return newModel;
     }
 
     private void gas(double amount) {
@@ -145,17 +154,23 @@ public class CarModel implements IModel,IEventListener<CarEvent> {
             }
         }
     }
+
     private void setSpeed(double amount) {
         speed = amount;
-        System.out.println(amount);
     }
 
     private void addCar(double amount){
         if(cars.size() < 10)
             cars.add(new Volvo240());
     }
+
     private void removeCar(double amount){
         if(cars.size() > 0)
             cars.remove(cars.size() - 1);
+    }
+
+    void hej(double a){
+        turboOn(a);
+        gas(a);
     }
 }

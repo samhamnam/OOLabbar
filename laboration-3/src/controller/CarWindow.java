@@ -1,5 +1,5 @@
 package controller;
-import controller.interfaces.IWindow;
+import controller.abracts.IWindow;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,7 +1,4 @@
-package controller.interfaces;
-
-import java.awt.*;
-import java.util.ArrayList;
+package controller.abracts;
 
 public interface IView<Paintable> {
     Paintable getPanel();

@@ -2,39 +2,37 @@ package controller;
 
 import util.Tuple;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class EventMatching<key> {
-    private HashMap<key, func> dicc; // ;)
+public class EventMatching<Key, Func> {
+    private HashMap<Key, Func> dicc; // ;)
 
-    public EventMatching(HashMap<key,func> hm){
+    public EventMatching(HashMap<Key, Func> hm){
         dicc = hm;
     }
 
-    public EventMatching(key[] keys) {
-
+    public EventMatching(Key[] keys) {
         dicc = new HashMap<>();
-        for (key key : keys) {
-            dicc.put(key,x -> {});
+        for (Key key : keys) {
+            dicc.put(key,null);
         }
     }
-    public void assign(key key, func f){
+    public void assign(Key key, Func f){
         dicc.replace(key,f);
     }
-    public void assignAll(Tuple<key,func>[] ts){
-        for(Tuple<key, func> t :ts){
+    public void assignAll(Tuple<Key, Func>[] ts){
+        for(Tuple<Key, Func> t :ts){
             assign(t.getLeft(),t.getRight());
         }
     }
-    public func getFunc(key key){
+    public Func getFunc(Key key){
         return dicc.get(key);
     }
+/*
 
 
-    interface func {
-        void apply(double d);
-    }
+ */
+
 /*
     void test() {
         ArrayList<func> l = new ArrayList<>();

@@ -4,6 +4,7 @@ public class CarEvent {
     final private Command command;
     private final String description;
     private double amount;
+
     public CarEvent(String description,Command command, double amount) {
         this.description = description;
         this.amount = amount;
@@ -17,6 +18,10 @@ public class CarEvent {
 
     public Command getCommand() {
         return command;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public double getAmount() {

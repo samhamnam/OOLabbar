@@ -82,7 +82,7 @@ import java.awt.*;
     }
 
     /**
-     * Returns the name of the model.
+     * Returns the name of the mofdel.
      * @return String
      */
     public String getModelName() {

@@ -1,4 +1,4 @@
-package controller.interfaces;
+package controller.abracts;
 
 public interface IWindow<Paintable> {
     void repaint();
